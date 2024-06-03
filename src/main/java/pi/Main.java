@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner ler = new Scanner(System.in);
+
         //0-24 plateia a
         //25-124 plateia b
         //125-129 frisa 1
@@ -21,14 +23,24 @@ public class Main {
         
         int[] poltronas = new int[255];
 
+        //linha 0 matutino
+        //linha 1 vespertino
+        //linha 3 noturno
         long[][] p1 = new long[3][255];
         long[][] p2 = new long[3][255];
         long[][] p3 = new long[3][255];
-        Scanner ler = new Scanner(System.in);
-        System.out.println("digite o seu cpf");
+
+        
+        System.out.println("Digite o seu CPF.");
         long cpf = ler.nextLong();
-        System.out.println("digite para qual peça vc quer o ingresso (p1, p2 ou p3)");
+
+        System.out.println("Digite para qual peça vc quer o ingresso (p1, p2 ou p3).");
         String peca = ler.next();
 
+        System.out.println("Digite horário da peça.");
+        String horario = ler.next();
+
+
+        
     }
 }
