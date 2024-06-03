@@ -41,24 +41,36 @@ public class Main {
         System.out.println("Digite horário da peça (manhã, tarde ou noite)");
         String horario = ler.next();
 
-        if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("manha")) {
+        if (peca.equalsIgnoreCase("p1")) {
+            if (horario.equalsIgnoreCase("manha")) {
 
-        } else if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("tarde")) {
+            }
+            if (horario.equalsIgnoreCase("tarde")) {
 
-        } else if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("noite")) {
+            }
+            if (horario.equalsIgnoreCase("noite")) {
 
-        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("manha")) {
+            }
+        } else if (peca.equalsIgnoreCase("p2")) {
+            if (horario.equalsIgnoreCase("manhã")) {
 
-        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("tarde")) {
+            }
+            if (horario.equalsIgnoreCase("tarde")) {
 
-        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("noite")) {
+            }
+            if (horario.equalsIgnoreCase("noite")) {
 
-        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("manha")) {
+            }
+        } else if (peca.equalsIgnoreCase("p3")) {
+            if (horario.equalsIgnoreCase("manhã")) {
 
-        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("tarde")) {
+            }
+            if (horario.equalsIgnoreCase("tarde")) {
 
-        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("noite")) {
+            }
+            if (horario.equalsIgnoreCase("noite")) {
 
+            }
         }
 
         
