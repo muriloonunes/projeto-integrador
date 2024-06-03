@@ -26,6 +26,7 @@ public class Main {
         //linha 0 matutino
         //linha 1 vespertino
         //linha 3 noturno
+
         long[][] p1 = new long[3][255];
         long[][] p2 = new long[3][255];
         long[][] p3 = new long[3][255];
@@ -34,12 +35,31 @@ public class Main {
         System.out.println("Digite o seu CPF.");
         long cpf = ler.nextLong();
 
-        System.out.println("Digite para qual peça vc quer o ingresso (p1, p2 ou p3).");
+        System.out.println("Digite para qual peça voce quer o ingresso (p1, p2 ou p3).");
         String peca = ler.next();
 
-        System.out.println("Digite horário da peça.");
+        System.out.println("Digite horário da peça (manhã, tarde ou noite)");
         String horario = ler.next();
 
+        if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("manha")) {
+
+        } else if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("tarde")) {
+
+        } else if (peca.equalsIgnoreCase("p1") && horario.equalsIgnoreCase("noite")) {
+
+        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("manha")) {
+
+        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("tarde")) {
+
+        } else if (peca.equalsIgnoreCase("p2") && horario.equalsIgnoreCase("noite")) {
+
+        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("manha")) {
+
+        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("tarde")) {
+
+        } else if (peca.equalsIgnoreCase("p3") && horario.equalsIgnoreCase("noite")) {
+
+        }
 
         
     }
