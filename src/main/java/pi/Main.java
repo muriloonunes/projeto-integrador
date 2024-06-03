@@ -18,7 +18,7 @@ public class Main {
         //185-194 camarote 4
         //195-204 camarote 5
         //205-254 balcão norte
-
+        //cu
         int[] poltronas = new int[255];
 
         long[][] p1 = new long[3][255];
