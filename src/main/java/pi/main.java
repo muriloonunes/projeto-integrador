@@ -4,11 +4,10 @@ import java.util.Scanner;
 
 public class Main {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
-    static String[] horarios = {"Manhã", "Tarde", "Noite", "Manha"};
+    static String[] horarios = {"Manhã", "Tarde", "Noite"};
     static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
-
-    static int[] poltronas = new int[255];
+    static int[][] poltronasPorArea = {{1, 25}, {26, 125}, {126, 155}, {156, 195}, {196, 245}};
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
@@ -54,6 +53,7 @@ public class Main {
 
         System.out.print("Digite o seu CPF: ");
         long cpf = ler.nextLong();
+
         String peca;
         while (true) {
             System.out.println("Digite para qual peça você quer o ingresso (p1, p2 ou p3):");
@@ -66,52 +66,91 @@ public class Main {
             }
         }
 
-        System.out.println("Digite horário da peça: m (manhã), t (tarde) ou n (noite):");
-        String horario = ler.next();
+        String horario;
+        while (true) {
+            System.out.println("Digite horário da peça: m (manhã), t (tarde) ou n (noite):");
+            horario = ler.next();
 
-        System.out.println("Escolha a área:");
-        for (int i = 0; i < areas.length; i++) {
-            System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ")");
+            try {
+                verificarHorario(horario);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Horário inválido! Por favor, digite m (manhã), t (tarde) ou n (noite).");
+            }
         }
-        int areaEscolhida = ler.nextInt();
 
-        System.out.print("Número da poltrona: ");
-        int poltrona = ler.nextInt();
+        int areaEscolhida;
+        while (true) {
+            System.out.println("Escolha a área:");
+            for (int i = 0; i < areas.length; i++) {
+                System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronasPorArea[i][0] + " a " + poltronasPorArea[i][1] + ")");
+            }
+            areaEscolhida = ler.nextInt();
+
+            if (areaEscolhida >= 1 && areaEscolhida <= 5) {
+                break;
+            } else {
+                System.out.println("Área inválida! Por favor, escolha uma área entre 1 e 5.");
+            }
+        }
+
+        int poltrona;
+        while (true) {
+            System.out.print("Número da poltrona: ");
+            poltrona = ler.nextInt();
+
+            if (validarPoltrona(areaEscolhida, poltrona)) {
+                break;
+            } else {
+                System.out.println("Número de poltrona inválido para a área escolhida! Por favor, escolha uma poltrona válida.");
+            }
+        }
 
         if (peca.equalsIgnoreCase("p1")) {
-            adicionarVenda(p1, cpf, horario, poltrona);
+            if (adicionarVenda(p1, cpf, horario, poltrona)) return;
         } else if (peca.equalsIgnoreCase("p2")) {
-            adicionarVenda(p2, cpf, horario, poltrona);
-        } else if (peca.equalsIgnoreCase("p3")) {
-            adicionarVenda(p3, cpf, horario, poltrona);
+            if (adicionarVenda(p2, cpf, horario, poltrona)) return;
+        } else {
+            if (adicionarVenda(p3, cpf, horario, poltrona)) return;
         }
 
         totalVendas++;
         System.out.println("Ingresso comprado com sucesso!");
     }
 
-    private static void adicionarVenda(long[][] peca, long cpf, String horario, int poltrona) {
-        int indiceHorario = getIndiceHorario(horario);
-        peca[indiceHorario][poltrona] = cpf;
+    private static boolean adicionarVenda(long[][] peca, long cpf, String horario, int poltrona) {
+        int indiceHorario = verificarHorario(horario);
+        if (peca[indiceHorario][poltrona - 1] != 0) {
+            System.out.println("Erro: Poltrona já ocupada!");
+            return true;
+        }
+        peca[indiceHorario][poltrona - 1] = cpf;
+        return false;
     }
 
-    private static int getIndiceHorario(String horario) {
-        switch (horario.toLowerCase()) {
-            case "m":
-                return 0;
-            case "t":
-                return 1;
-            case "n":
-                return 2;
-            default:
-                throw new IllegalArgumentException("Horário inválido");
-        }
+    private static int verificarHorario(String horario) {
+        return switch (horario.toLowerCase()) {
+            case "m" -> 0;
+            case "t" -> 1;
+            case "n" -> 2;
+            default -> throw new IllegalArgumentException("Horário inválido");
+        };
+    }
+
+    private static boolean validarPoltrona(int area, int poltrona) {
+        return switch (area) {
+            case 1 -> poltrona >= 1 && poltrona <= 25; // Plateia A
+            case 2 -> poltrona >= 26 && poltrona <= 125; // Plateia B
+            case 3 -> poltrona >= 126 && poltrona <= 155; // Frisa (30 poltronas em 6 frisas)
+            case 4 -> poltrona >= 156 && poltrona <= 195; // Camarote (40 poltronas em 4 camarotes)
+            case 5 -> poltrona >= 196 && poltrona <= 245; // Balcão Nobre
+            default -> false;
+        };
     }
 
     public static void imprimirIngresso(Scanner ler) {
         System.out.print("Digite o seu CPF: ");
         long cpf = ler.nextLong();
-        ler.nextLine();  // Consumir nova linha
 
         boolean encontrado = false;
         encontrado = imprimirVendaPorCPF(p1, cpf, "Peça 1") || encontrado;
@@ -131,7 +170,7 @@ public class Main {
                     System.out.println("CPF: " + cpf);
                     System.out.println("Peça: " + nomePeca);
                     System.out.println("Sessão: " + horarios[i]);
-                    System.out.println("Poltrona: " + j);
+                    System.out.println("Poltrona: " + (j + 1));
                     return true;
                 }
             }
@@ -156,10 +195,10 @@ public class Main {
             }
         }
 
-        int pecaMaisVendida = getIndiceMax(vendasPorPeca);
-        int pecaMenosVendida = getIndiceMin(vendasPorPeca);
-        int sessaoMaisOcupada = getIndiceMax(vendasPorSessao);
-        int sessaoMenosOcupada = getIndiceMin(vendasPorSessao);
+        int pecaMaisVendida = maisVendido(vendasPorPeca);
+        int pecaMenosVendida = menosVendido(vendasPorPeca);
+        int sessaoMaisOcupada = maisVendido(vendasPorSessao);
+        int sessaoMenosOcupada = menosVendido(vendasPorSessao);
 
         double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
 
@@ -175,22 +214,22 @@ public class Main {
             for (int j = 0; j < peca[i].length; j++) {
                 if (peca[i][j] != 0) {
                     vendasPorPeca[indicePeca]++;
-                    lucroPorPeca[indicePeca] += getPrecoArea(j);
+                    lucroPorPeca[indicePeca] += getPrecoArea(j + 1);
                 }
             }
         }
     }
 
     private static double getPrecoArea(int poltrona) {
-        if (poltrona >= 0 && poltrona <= 24) return precos[0];
-        if (poltrona >= 25 && poltrona <= 124) return precos[1];
-        if (poltrona >= 125 && poltrona <= 154) return precos[2];
-        if (poltrona >= 155 && poltrona <= 194) return precos[3];
-        if (poltrona >= 195 && poltrona <= 254) return precos[4];
+        if (poltrona >= 1 && poltrona <= 25) return precos[0];
+        if (poltrona >= 26 && poltrona <= 125) return precos[1];
+        if (poltrona >= 126 && poltrona <= 155) return precos[2];
+        if (poltrona >= 156 && poltrona <= 195) return precos[3];
+        if (poltrona >= 196 && poltrona <= 245) return precos[4];
         return 0;
     }
 
-    private static int getIndiceMax(int[] array) {
+    private static int maisVendido(int[] array) {
         int max = 0;
         for (int i = 1; i < array.length; i++) {
             if (array[i] > array[max]) {
@@ -200,7 +239,7 @@ public class Main {
         return max;
     }
 
-    private static int getIndiceMin(int[] array) {
+    private static int menosVendido(int[] array) {
         int min = 0;
         for (int i = 1; i < array.length; i++) {
             if (array[i] < array[min]) {
