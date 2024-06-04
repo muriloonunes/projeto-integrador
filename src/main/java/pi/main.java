@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
-    static String[] horarios = {"Manhã", "Tarde", "Noite"};
+    static String[] horarios = {"Manhã", "Tarde", "Noite", "Manha"};
     static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
 
@@ -12,20 +12,19 @@ public class Main {
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
-    
+
     static int totalVendas = 0;
 
     public static void main(String[] args) {
         Scanner ler = new Scanner(System.in);
 
         while (true) {
+            System.out.println("Escolha uma opção: ");
             System.out.println("1. Comprar Ingresso");
             System.out.println("2. Imprimir Ingresso");
             System.out.println("3. Estatísticas de Vendas");
             System.out.println("4. Sair");
-            System.out.print("Escolha uma opção: ");
             int opcao = ler.nextInt();
-            ler.nextLine();  // Consumir nova linha
 
             switch (opcao) {
                 case 1:
@@ -55,24 +54,29 @@ public class Main {
 
         System.out.print("Digite o seu CPF: ");
         long cpf = ler.nextLong();
-        ler.nextLine();  // Consumir nova linha
+        String peca;
+        while (true) {
+            System.out.println("Digite para qual peça você quer o ingresso (p1, p2 ou p3):");
+            peca = ler.next();
 
-        System.out.println("Digite para qual peça você quer o ingresso (p1, p2 ou p3):");
-        String peca = ler.nextLine();
+            if (peca.equals("p1") || peca.equals("p2") || peca.equals("p3")) {
+                break;
+            } else {
+                System.out.println("Peça inválida! Por favor, digite p1, p2 ou p3.");
+            }
+        }
 
-        System.out.println("Digite horário da peça (manhã, tarde ou noite):");
-        String horario = ler.nextLine();
+        System.out.println("Digite horário da peça: m (manhã), t (tarde) ou n (noite):");
+        String horario = ler.next();
 
         System.out.println("Escolha a área:");
         for (int i = 0; i < areas.length; i++) {
             System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ")");
         }
         int areaEscolhida = ler.nextInt();
-        ler.nextLine();  // Consumir nova linha
 
         System.out.print("Número da poltrona: ");
         int poltrona = ler.nextInt();
-        ler.nextLine();  // Consumir nova linha
 
         if (peca.equalsIgnoreCase("p1")) {
             adicionarVenda(p1, cpf, horario, poltrona);
@@ -93,11 +97,11 @@ public class Main {
 
     private static int getIndiceHorario(String horario) {
         switch (horario.toLowerCase()) {
-            case "manhã":
+            case "m":
                 return 0;
-            case "tarde":
+            case "t":
                 return 1;
-            case "noite":
+            case "n":
                 return 2;
             default:
                 throw new IllegalArgumentException("Horário inválido");
