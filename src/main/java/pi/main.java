@@ -145,7 +145,7 @@ public class Main {
             case 1 -> poltrona >= 1 && poltrona <= 25; // Plateia A
             case 2 -> poltrona >= 26 && poltrona <= 125; // Plateia B
             case 3 -> poltrona >= 126 && poltrona <= 155; // Frisa (30 poltronas em 6 frisas)
-            case 4 -> poltrona >= 156 && poltrona <= 205; // Camarote (40 poltronas em 4 camarotes)
+            case 4 -> poltrona >= 156 && poltrona <= 205; // Camarote (50 poltronas em 5 camarotes)
             case 5 -> poltrona >= 206 && poltrona <= 255; // Balcão Nobre
             default -> false;
         };
@@ -215,8 +215,9 @@ public class Main {
 
         double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
 
-        System.out.println("Peça mais vendida: " + pecas[pecaMaisVendida]);
-        System.out.println("Peça menos vendida: " + pecas[pecaMenosVendida]);
+        System.out.println("Total de vendas: "+totalVendas);
+        System.out.println("Peça com mais ingressos vendidos: " + pecas[pecaMaisVendida]);
+        System.out.println("Peça com menos ingressos vendidos: " + pecas[pecaMenosVendida]);
         System.out.println("Sessão com maior ocupação: " + horarios[sessaoMaisOcupada]);
         System.out.println("Sessão com menor ocupação: " + horarios[sessaoMenosOcupada]);
         System.out.println("Lucro médio por peça: R$ " + lucroMedio);
