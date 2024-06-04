@@ -7,7 +7,7 @@ public class Main {
     static String[] horarios = {"Manhã", "Tarde", "Noite"};
     static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
-    static int[][] poltronasPorArea = {{1, 25}, {26, 125}, {126, 155}, {156, 195}, {196, 245}};
+    static int[][] poltronas = {{1, 25}, {26, 125}, {126, 155}, {156, 195}, {196, 245}};
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
@@ -56,13 +56,16 @@ public class Main {
 
         String peca;
         while (true) {
-            System.out.println("Digite para qual peça você quer o ingresso (p1, p2 ou p3):");
+            System.out.println("Digite para qual peça você quer o ingresso\n" +
+                    "1 - Peça 1\n" +
+                    "2 - Peça 2\n" +
+                    "3 - Peça 3:");
             peca = ler.next();
 
-            if (peca.equals("p1") || peca.equals("p2") || peca.equals("p3")) {
+            if (peca.equals("1") || peca.equals("2") || peca.equals("3")) {
                 break;
             } else {
-                System.out.println("Peça inválida! Por favor, digite p1, p2 ou p3.");
+                System.out.println("Peça inválida! Por favor, digite 1, 2 ou 3.");
             }
         }
 
@@ -83,7 +86,7 @@ public class Main {
         while (true) {
             System.out.println("Escolha a área:");
             for (int i = 0; i < areas.length; i++) {
-                System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronasPorArea[i][0] + " a " + poltronasPorArea[i][1] + ")");
+                System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronas[i][0] + " a " + poltronas[i][1] + ")");
             }
             areaEscolhida = ler.nextInt();
 
@@ -106,9 +109,9 @@ public class Main {
             }
         }
 
-        if (peca.equalsIgnoreCase("p1")) {
+        if (peca.equalsIgnoreCase("1")) {
             if (adicionarVenda(p1, cpf, horario, poltrona)) return;
-        } else if (peca.equalsIgnoreCase("p2")) {
+        } else if (peca.equalsIgnoreCase("2")) {
             if (adicionarVenda(p2, cpf, horario, poltrona)) return;
         } else {
             if (adicionarVenda(p3, cpf, horario, poltrona)) return;
@@ -142,8 +145,8 @@ public class Main {
             case 1 -> poltrona >= 1 && poltrona <= 25; // Plateia A
             case 2 -> poltrona >= 26 && poltrona <= 125; // Plateia B
             case 3 -> poltrona >= 126 && poltrona <= 155; // Frisa (30 poltronas em 6 frisas)
-            case 4 -> poltrona >= 156 && poltrona <= 195; // Camarote (40 poltronas em 4 camarotes)
-            case 5 -> poltrona >= 196 && poltrona <= 245; // Balcão Nobre
+            case 4 -> poltrona >= 156 && poltrona <= 205; // Camarote (40 poltronas em 4 camarotes)
+            case 5 -> poltrona >= 206 && poltrona <= 255; // Balcão Nobre
             default -> false;
         };
     }
@@ -153,29 +156,32 @@ public class Main {
         long cpf = ler.nextLong();
 
         boolean encontrado = false;
-        encontrado = imprimirVendaPorCPF(p1, cpf, "Peça 1") || encontrado;
-        encontrado = imprimirVendaPorCPF(p2, cpf, "Peça 2") || encontrado;
-        encontrado = imprimirVendaPorCPF(p3, cpf, "Peça 3") || encontrado;
+        for (int i = 0; i < 3; i++) {
+            String nomePeca = pecas[i];
+            long[][] peca = switch (i) {
+                case 0 -> p1;
+                case 1 -> p2;
+                case 2 -> p3;
+                default -> null;
+            };
+
+            for (int j = 0; j < peca.length; j++) {
+                for (int k = 0; k < peca[j].length; k++) {
+                    if (peca[j][k] == cpf) {
+                        System.out.println("Ingresso encontrado:");
+                        System.out.println("CPF: " + cpf);
+                        System.out.println("Peça: " + nomePeca);
+                        System.out.println("Sessão: " + horarios[j]);
+                        System.out.println("Poltrona: " + (k + 1));
+                        encontrado = true;
+                    }
+                }
+            }
+        }
 
         if (!encontrado) {
             System.out.println("Ingresso não encontrado para o CPF informado.");
         }
-    }
-
-    private static boolean imprimirVendaPorCPF(long[][] peca, long cpf, String nomePeca) {
-        for (int i = 0; i < peca.length; i++) {
-            for (int j = 0; j < peca[i].length; j++) {
-                if (peca[i][j] == cpf) {
-                    System.out.println("Ingresso encontrado:");
-                    System.out.println("CPF: " + cpf);
-                    System.out.println("Peça: " + nomePeca);
-                    System.out.println("Sessão: " + horarios[i]);
-                    System.out.println("Poltrona: " + (j + 1));
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public static void estatisticasVendas() {
@@ -183,15 +189,22 @@ public class Main {
         int[] vendasPorSessao = new int[3];
         double[] lucroPorPeca = new double[3];
 
-        calcularVendasEReceitas(p1, vendasPorPeca, 0, lucroPorPeca);
-        calcularVendasEReceitas(p2, vendasPorPeca, 1, lucroPorPeca);
-        calcularVendasEReceitas(p3, vendasPorPeca, 2, lucroPorPeca);
-
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 255; j++) {
-                if (p1[i][j] != 0) vendasPorSessao[i]++;
-                if (p2[i][j] != 0) vendasPorSessao[i]++;
-                if (p3[i][j] != 0) vendasPorSessao[i]++;
+            long[][] peca = switch (i) {
+                case 0 -> p1;
+                case 1 -> p2;
+                case 2 -> p3;
+                default -> null;
+            };
+
+            for (int j = 0; j < peca.length; j++) {
+                for (int k = 0; k < peca[j].length; k++) {
+                    if (peca[j][k] != 0) {
+                        vendasPorPeca[i]++;
+                        lucroPorPeca[i] += precoPorPoltrona(k + 1);
+                        vendasPorSessao[j]++;
+                    }
+                }
             }
         }
 
@@ -209,23 +222,12 @@ public class Main {
         System.out.println("Lucro médio por peça: R$ " + lucroMedio);
     }
 
-    private static void calcularVendasEReceitas(long[][] peca, int[] vendasPorPeca, int indicePeca, double[] lucroPorPeca) {
-        for (int i = 0; i < peca.length; i++) {
-            for (int j = 0; j < peca[i].length; j++) {
-                if (peca[i][j] != 0) {
-                    vendasPorPeca[indicePeca]++;
-                    lucroPorPeca[indicePeca] += getPrecoArea(j + 1);
-                }
-            }
-        }
-    }
-
-    private static double getPrecoArea(int poltrona) {
+    private static double precoPorPoltrona(int poltrona) {
         if (poltrona >= 1 && poltrona <= 25) return precos[0];
         if (poltrona >= 26 && poltrona <= 125) return precos[1];
         if (poltrona >= 126 && poltrona <= 155) return precos[2];
-        if (poltrona >= 156 && poltrona <= 195) return precos[3];
-        if (poltrona >= 196 && poltrona <= 245) return precos[4];
+        if (poltrona >= 156 && poltrona <= 205) return precos[3];
+        if (poltrona >= 196 && poltrona <= 255) return precos[4];
         return 0;
     }
 
