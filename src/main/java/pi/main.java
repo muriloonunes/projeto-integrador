@@ -51,7 +51,7 @@ public class Main {
             return;
         }
 
-        System.out.print("Digite o seu CPF ou " + -1 + " para voltar ao menu inicial: ");
+        System.out.print("Digite o seu CPF ou " + retornar + " para voltar ao menu inicial: ");
         long cpf = ler.nextLong();
 
         if (cpf == retornar) {
@@ -61,12 +61,12 @@ public class Main {
         int peca;
         while (true) {
             System.out.println("""
-                    Digite para qual peça você quer o ingresso
-                    1 - Peça 1
-                    2 - Peça 2
-                    3 - Peça 3
-                    ou -1 para voltar ao menu inicial:
-                    """);
+                Digite para qual peça você quer o ingresso
+                1 - Peça 1
+                2 - Peça 2
+                3 - Peça 3
+                ou -1 para voltar ao menu inicial:
+                """);
             peca = ler.nextInt();
 
             if (peca == retornar) {
@@ -80,26 +80,25 @@ public class Main {
             }
         }
 
+        System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde), 3 (noite) ou " + retornar + " para voltar ao menu inicial: ");
         int horario;
         while (true) {
-            System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde), 3 (noite) ou " + -1 + " para voltar ao menu inicial: ");
             horario = ler.nextInt();
 
             if (horario == retornar) {
                 return;
             }
 
-            try {
-                verificarHorario(horario);
+            if (horario >= 1 && horario <= 3) {
                 break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Horário inválido! Por favor, digite m (manhã), t (tarde) ou n (noite).");
+            } else {
+                System.out.println("Horário inválido! Por favor, digite 1 (manhã), 2 (tarde) ou 3 (noite).");
             }
         }
 
         int areaEscolhida;
         while (true) {
-            System.out.println("Escolha a área ou " + -1 +" para voltar ao menu inicial: ");
+            System.out.println("Escolha a área ou " + retornar +" para voltar ao menu inicial: ");
             for (int i = 0; i < areas.length; i++) {
                 System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronas[i][0] + " a " + poltronas[i][1] + ")");
             }
@@ -118,7 +117,7 @@ public class Main {
 
         int poltrona;
         while (true) {
-            System.out.print("Digite o número da poltrona desejada ou " + -1 +" para voltar ao menu inicial: ");
+            System.out.print("Digite o número da poltrona desejada ou " + retornar +" para voltar ao menu inicial: ");
             poltrona = ler.nextInt();
 
             if (poltrona == retornar) {
