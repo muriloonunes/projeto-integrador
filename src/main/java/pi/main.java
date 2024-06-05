@@ -7,12 +7,12 @@ public class Main {
     static String[] horarios = {"Manhã", "Tarde", "Noite"};
     static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
-    static int[][] poltronas = {{1, 25}, {26, 125}, {126, 155}, {156, 195}, {196, 245}};
+    static int[][] poltronas = {{1, 25}, {26, 125}, {126, 155}, {156, 205}, {206, 255}};
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
-
     static int totalVendas = 0;
+    static final int retornar = -1;
 
     public static void main(String[] args) {
         Scanner ler = new Scanner(System.in);
@@ -24,6 +24,10 @@ public class Main {
             System.out.println("3. Estatísticas de Vendas");
             System.out.println("4. Sair");
             int opcao = ler.nextInt();
+
+            if (opcao == retornar) {
+                continue;
+            }
 
             switch (opcao) {
                 case 1:
@@ -54,25 +58,38 @@ public class Main {
         System.out.print("Digite o seu CPF: ");
         long cpf = ler.nextLong();
 
-        String peca;
-        while (true) {
-            System.out.println("Digite para qual peça você quer o ingresso\n" +
-                    "1 - Peça 1\n" +
-                    "2 - Peça 2\n" +
-                    "3 - Peça 3:");
-            peca = ler.next();
+        if (cpf == retornar) {
+            return;
+        }
 
-            if (peca.equals("1") || peca.equals("2") || peca.equals("3")) {
+        int peca;
+        while (true) {
+            System.out.println("""
+                    Digite para qual peça você quer o ingresso
+                    1 - Peça 1
+                    2 - Peça 2
+                    3 - Peça 3:""");
+            peca = ler.nextInt();
+
+            if (peca == retornar) {
+                return;
+            }
+
+            if (peca == 1 || peca == 2 || peca == 3) {
                 break;
             } else {
                 System.out.println("Peça inválida! Por favor, digite 1, 2 ou 3.");
             }
         }
 
-        String horario;
+        int horario;
         while (true) {
-            System.out.println("Digite horário da peça: m (manhã), t (tarde) ou n (noite):");
-            horario = ler.next();
+            System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde) ou 3 (noite):");
+            horario = ler.nextInt();
+
+            if (horario == retornar) {
+                return;
+            }
 
             try {
                 verificarHorario(horario);
@@ -90,6 +107,10 @@ public class Main {
             }
             areaEscolhida = ler.nextInt();
 
+            if (areaEscolhida == retornar) {
+                return;
+            }
+
             if (areaEscolhida >= 1 && areaEscolhida <= 5) {
                 break;
             } else {
@@ -102,6 +123,10 @@ public class Main {
             System.out.print("Número da poltrona: ");
             poltrona = ler.nextInt();
 
+            if (poltrona == retornar) {
+                return;
+            }
+
             if (validarPoltrona(areaEscolhida, poltrona)) {
                 break;
             } else {
@@ -109,9 +134,9 @@ public class Main {
             }
         }
 
-        if (peca.equalsIgnoreCase("1")) {
+        if (peca == 1) {
             if (adicionarVenda(p1, cpf, horario, poltrona)) return;
-        } else if (peca.equalsIgnoreCase("2")) {
+        } else if (peca == 2) {
             if (adicionarVenda(p2, cpf, horario, poltrona)) return;
         } else {
             if (adicionarVenda(p3, cpf, horario, poltrona)) return;
@@ -121,7 +146,7 @@ public class Main {
         System.out.println("Ingresso comprado com sucesso!");
     }
 
-    private static boolean adicionarVenda(long[][] peca, long cpf, String horario, int poltrona) {
+    private static boolean adicionarVenda(long[][] peca, long cpf, int horario, int poltrona) {
         int indiceHorario = verificarHorario(horario);
         if (peca[indiceHorario][poltrona - 1] != 0) {
             System.out.println("Erro: Poltrona já ocupada!");
@@ -131,11 +156,11 @@ public class Main {
         return false;
     }
 
-    private static int verificarHorario(String horario) {
-        return switch (horario.toLowerCase()) {
-            case "m" -> 0;
-            case "t" -> 1;
-            case "n" -> 2;
+    private static int verificarHorario(int horario) {
+        return switch (horario) {
+            case 1 -> 0;
+            case 2 -> 1;
+            case 3 -> 2;
             default -> throw new IllegalArgumentException("Horário inválido");
         };
     }
@@ -154,6 +179,10 @@ public class Main {
     public static void imprimirIngresso(Scanner ler) {
         System.out.print("Digite o seu CPF: ");
         long cpf = ler.nextLong();
+
+        if (cpf == retornar) {
+            return;
+        }
 
         boolean encontrado = false;
         for (int i = 0; i < 3; i++) {
@@ -215,7 +244,7 @@ public class Main {
 
         double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
 
-        System.out.println("Total de vendas: "+totalVendas);
+        System.out.println("Total de vendas: " + totalVendas);
         System.out.println("Peça com mais ingressos vendidos: " + pecas[pecaMaisVendida]);
         System.out.println("Peça com menos ingressos vendidos: " + pecas[pecaMenosVendida]);
         System.out.println("Sessão com maior ocupação: " + horarios[sessaoMaisOcupada]);
