@@ -65,7 +65,7 @@ public class Main {
                     1 - Peça 1
                     2 - Peça 2
                     3 - Peça 3
-                    ou " + -1 + " para voltar ao menu inicial:
+                    ou -1 para voltar ao menu inicial:
                     """);
             peca = ler.nextInt();
 
