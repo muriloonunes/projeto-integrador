@@ -25,10 +25,6 @@ public class Main {
             System.out.println("4. Sair");
             int opcao = ler.nextInt();
 
-            if (opcao == retornar) {
-                continue;
-            }
-
             switch (opcao) {
                 case 1:
                     comprarIngresso(ler);
@@ -55,7 +51,7 @@ public class Main {
             return;
         }
 
-        System.out.print("Digite o seu CPF: ");
+        System.out.print("Digite o seu CPF ou " + -1 + " para voltar ao menu inicial: ");
         long cpf = ler.nextLong();
 
         if (cpf == retornar) {
@@ -68,7 +64,9 @@ public class Main {
                     Digite para qual peça você quer o ingresso
                     1 - Peça 1
                     2 - Peça 2
-                    3 - Peça 3:""");
+                    3 - Peça 3
+                    ou " + -1 + " para voltar ao menu inicial:
+                    """);
             peca = ler.nextInt();
 
             if (peca == retornar) {
@@ -84,7 +82,7 @@ public class Main {
 
         int horario;
         while (true) {
-            System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde) ou 3 (noite):");
+            System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde), 3 (noite) ou " + -1 + " para voltar ao menu inicial: ");
             horario = ler.nextInt();
 
             if (horario == retornar) {
@@ -101,7 +99,7 @@ public class Main {
 
         int areaEscolhida;
         while (true) {
-            System.out.println("Escolha a área:");
+            System.out.println("Escolha a área ou " + -1 +" para voltar ao menu inicial: ");
             for (int i = 0; i < areas.length; i++) {
                 System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronas[i][0] + " a " + poltronas[i][1] + ")");
             }
@@ -120,7 +118,7 @@ public class Main {
 
         int poltrona;
         while (true) {
-            System.out.print("Número da poltrona: ");
+            System.out.print("Digite o número da poltrona desejada ou " + -1 +" para voltar ao menu inicial: ");
             poltrona = ler.nextInt();
 
             if (poltrona == retornar) {
@@ -282,17 +280,17 @@ public class Main {
     }
 }
 
-        //0-24 plateia a
-        //25-124 plateia b
-        //125-129 frisa 1
-        //130-134 frisa 2
-        //135-139 frisa 3
-        //140-144 frisa 4
-        //145-149 frisa 5
-        //150-154 frisa 6
-        //155-164 camarote 1
-        //165-174 camarote 2
-        //175-184 camarote 3
-        //185-194 camarote 4
-        //195-204 camarote 5
-        //205-254 balcão norte
+//0-24 plateia a
+//25-124 plateia b
+//125-129 frisa 1
+//130-134 frisa 2
+//135-139 frisa 3
+//140-144 frisa 4
+//145-149 frisa 5
+//150-154 frisa 6
+//155-164 camarote 1
+//165-174 camarote 2
+//175-184 camarote 3
+//185-194 camarote 4
+//195-204 camarote 5
+//205-254 balcão norte
