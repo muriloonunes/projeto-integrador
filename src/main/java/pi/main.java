@@ -281,3 +281,18 @@ public class Main {
         return min;
     }
 }
+
+        //0-24 plateia a
+        //25-124 plateia b
+        //125-129 frisa 1
+        //130-134 frisa 2
+        //135-139 frisa 3
+        //140-144 frisa 4
+        //145-149 frisa 5
+        //150-154 frisa 6
+        //155-164 camarote 1
+        //165-174 camarote 2
+        //175-184 camarote 3
+        //185-194 camarote 4
+        //195-204 camarote 5
+        //205-254 balcão norte
