@@ -1,4 +1,4 @@
-package senai.projetointegrador.javafx;
+package pi.projetointegrador;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -37,15 +37,15 @@ public class Main extends Application {
         GridPane.setConstraints(label, 0, 0);
 
         Button comprarButton = new Button("Comprar Ingresso");
-        comprarButton.setOnAction(e -> comprarIngresso());
+        comprarButton.setOnAction(e -> comprarIngresso(primaryStage));
         GridPane.setConstraints(comprarButton, 0, 1);
 
         Button imprimirButton = new Button("Imprimir Ingresso");
-        imprimirButton.setOnAction(e -> imprimirIngresso());
+        imprimirButton.setOnAction(e -> imprimirIngresso(primaryStage));
         GridPane.setConstraints(imprimirButton, 0, 2);
 
         Button estatisticasButton = new Button("Estatísticas de Vendas");
-        estatisticasButton.setOnAction(e -> estatisticasVendas());
+        estatisticasButton.setOnAction(e -> estatisticasVendas(primaryStage));
         GridPane.setConstraints(estatisticasButton, 0, 3);
 
         Button sairButton = new Button("Sair");
@@ -59,9 +59,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void comprarIngresso() {
-        Stage window = new Stage();
-        window.setTitle("Comprar Ingresso");
+    private void comprarIngresso(Stage primaryStage) {
+        primaryStage.setTitle("Comprar Ingresso");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -109,31 +108,36 @@ public class Main extends Application {
             int area = areaChoice.getSelectionModel().getSelectedIndex();
             int poltrona = Integer.parseInt(poltronaInput.getText());
 
-            if (peca != retornar && horario != retornar && area != retornar && poltrona != retornar) {
-                boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
-                if (success) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Sucesso");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Ingresso comprado com sucesso!");
-                    alert.showAndWait();
-                    window.close();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
-                    alert.showAndWait();
-                }
+            boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
+            if (success) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Sucesso");
+                alert.setHeaderText(null);
+                alert.setContentText("Ingresso comprado com sucesso!");
+                alert.showAndWait();
+                start(primaryStage);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erro");
+                alert.setHeaderText(null);
+                alert.setContentText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
+                alert.showAndWait();
             }
+
         });
         GridPane.setConstraints(comprarButton, 1, 5);
 
-        grid.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton);
+        Button voltar = new Button("Voltar");
+        voltar.setOnAction(e -> {
+            start(primaryStage);
+        });
+        GridPane.setConstraints(voltar, 1, 10);
+
+        grid.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
 
         Scene scene = new Scene(grid, 400, 300);
-        window.setScene(scene);
-        window.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private boolean comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
@@ -186,9 +190,8 @@ public class Main extends Application {
         };
     }
 
-    private void imprimirIngresso() {
-        Stage window = new Stage();
-        window.setTitle("Imprimir Ingresso");
+    private void imprimirIngresso(Stage primaryStage) {
+        primaryStage.setTitle("Imprimir Ingresso");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -213,11 +216,17 @@ public class Main extends Application {
         });
         GridPane.setConstraints(imprimirButton, 1, 1);
 
-        grid.getChildren().addAll(cpfLabel, cpfInput, imprimirButton);
+        Button voltar = new Button("Voltar");
+        voltar.setOnAction(e -> {
+            start(primaryStage);
+        });
+        GridPane.setConstraints(voltar, 1, 2);
+
+        grid.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
 
         Scene scene = new Scene(grid, 300, 200);
-        window.setScene(scene);
-        window.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private String buscarIngresso(long cpf) {
@@ -245,9 +254,8 @@ public class Main extends Application {
         return "Ingresso não encontrado para o CPF informado.";
     }
 
-    private void estatisticasVendas() {
-        Stage window = new Stage();
-        window.setTitle("Estatísticas de Vendas");
+    private void estatisticasVendas(Stage primaryStage) {
+        primaryStage.setTitle("Estatísticas de Vendas");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -302,11 +310,17 @@ public class Main extends Application {
         Label lucroMedioLabel = new Label("Lucro médio por peça: R$ " + lucroMedio);
         GridPane.setConstraints(lucroMedioLabel, 0, 5);
 
-        grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel);
+        Button voltar = new Button("Voltar");
+        voltar.setOnAction(e -> {
+            start(primaryStage);
+        });
+        GridPane.setConstraints(voltar, 1, 10);
+
+        grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar);
 
         Scene scene = new Scene(grid, 400, 300);
-        window.setScene(scene);
-        window.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private double precoPorPoltrona(int poltrona) {
