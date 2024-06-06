@@ -17,7 +17,6 @@ public class Main extends Application {
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
     static int totalVendas = 0;
-    static final int retornar = -1;
 
     public static void main(String[] args) {
         launch(args);
@@ -214,13 +213,13 @@ public class Main extends Application {
             alert.setContentText(result);
             alert.showAndWait();
         });
-        GridPane.setConstraints(imprimirButton, 1, 1);
+        GridPane.setConstraints(imprimirButton, 0, 1);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 1, 2);
+        GridPane.setConstraints(voltar, 1, 1);
 
         grid.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
 
@@ -314,7 +313,7 @@ public class Main extends Application {
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 1, 10);
+        GridPane.setConstraints(voltar, 0, 6);
 
         grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar);
 
