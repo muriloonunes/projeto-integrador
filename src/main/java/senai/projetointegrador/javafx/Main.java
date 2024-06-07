@@ -12,7 +12,6 @@ public class Main extends Application {
     static String[] horarios = {"Manhã", "Tarde", "Noite"};
     static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
-    static int[][] poltronas = {{1, 25}, {26, 125}, {126, 155}, {156, 205}, {206, 255}};
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
@@ -53,7 +52,7 @@ public class Main extends Application {
 
         grid.getChildren().addAll(label, comprarButton, imprimirButton, estatisticasButton, sairButton);
 
-        Scene scene = new Scene(grid, 300, 200);
+        Scene scene = new Scene(grid, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -134,7 +133,7 @@ public class Main extends Application {
 
         grid.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
 
-        Scene scene = new Scene(grid, 400, 300);
+        Scene scene = new Scene(grid, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -223,7 +222,7 @@ public class Main extends Application {
 
         grid.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
 
-        Scene scene = new Scene(grid, 300, 200);
+        Scene scene = new Scene(grid, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -257,13 +256,17 @@ public class Main extends Application {
         primaryStage.setTitle("Estatísticas de Vendas");
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        grid.setPadding(new Insets(15, 15, 15, 15));
+        grid.setVgap(16);
+        grid.setHgap(20);
 
         int[] vendasPorPeca = new int[3];
         int[] vendasPorSessao = new int[3];
         double[] lucroPorPeca = new double[3];
+        double[] lucroMaximoPorPeca = new double[3];
+        int[] sessaoMaisLucrativaPorPeca = new int[3];
+        double[] lucroMinimoPorPeca = new double[3];
+        int[] sessaoMenosLucrativaPorPeca = new int[3];
 
         for (int i = 0; i < 3; i++) {
             long[][] peca = switch (i) {
@@ -274,12 +277,22 @@ public class Main extends Application {
             };
 
             for (int j = 0; j < peca.length; j++) {
+                double lucroSessao = 0;
                 for (int k = 0; k < peca[j].length; k++) {
                     if (peca[j][k] != 0) {
                         vendasPorPeca[i]++;
                         lucroPorPeca[i] += precoPorPoltrona(k + 1);
                         vendasPorSessao[j]++;
+                        lucroSessao += precoPorPoltrona(k + 1);
                     }
+                }
+                if (lucroSessao > lucroMaximoPorPeca[i]) {
+                    lucroMaximoPorPeca[i] = lucroSessao;
+                    sessaoMaisLucrativaPorPeca[i] = j;
+                }
+                if (lucroSessao < lucroMinimoPorPeca[i] || lucroMinimoPorPeca[i] == 0) {
+                    lucroMinimoPorPeca[i] = lucroSessao;
+                    sessaoMenosLucrativaPorPeca[i] = j;
                 }
             }
         }
@@ -292,6 +305,7 @@ public class Main extends Application {
         double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
 
         Label totalVendasLabel = new Label("Total de vendas: " + totalVendas);
+        GridPane.setConstraints(totalVendasLabel, 0, 0);
         GridPane.setConstraints(totalVendasLabel, 0, 0);
 
         Label pecaMaisVendidaLabel = new Label("Peça com mais ingressos vendidos: " + pecas[pecaMaisVendida]);
@@ -309,15 +323,34 @@ public class Main extends Application {
         Label lucroMedioLabel = new Label("Lucro médio por peça: R$ " + lucroMedio);
         GridPane.setConstraints(lucroMedioLabel, 0, 5);
 
+        Label sessaoMais1 = new Label("Sessão mais lucrativa da peça 1:  " + horarios[sessaoMaisLucrativaPorPeca[0]]);
+        GridPane.setConstraints(sessaoMais1, 0, 6);
+
+        Label sessaoMenos1 = new Label("Sessão menos lucrativa da peça 1:  " + horarios[sessaoMenosLucrativaPorPeca[0]]);
+        GridPane.setConstraints(sessaoMenos1, 0, 7);
+
+        Label sessaoMais2 = new Label("Sessão mais lucrativa da peça 2:  " + horarios[sessaoMaisLucrativaPorPeca[1]]);
+        GridPane.setConstraints(sessaoMais2, 0, 8);
+
+        Label sessaoMenos2 = new Label("Sessão menos lucrativa da peça 2: " + horarios[sessaoMenosLucrativaPorPeca[1]]);
+        GridPane.setConstraints(sessaoMenos2, 0, 9);
+
+        Label sessaoMais3 = new Label("Sessão mais lucrativa da peça 3: " + horarios[sessaoMaisLucrativaPorPeca[2]]);
+        GridPane.setConstraints(sessaoMais3, 0, 10);
+
+        Label sessaoMenos3 = new Label("Sessão menos lucrativa da peça 3: " + horarios[sessaoMenosLucrativaPorPeca[2]]);
+        GridPane.setConstraints(sessaoMenos3, 0, 11);
+
+
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 0, 6);
+        GridPane.setConstraints(voltar, 0, 12);
 
-        grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar);
+        grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
 
-        Scene scene = new Scene(grid, 400, 300);
+        Scene scene = new Scene(grid, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
