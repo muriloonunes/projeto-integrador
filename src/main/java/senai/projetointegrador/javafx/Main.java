@@ -26,7 +26,9 @@ public class Main extends Application {
         primaryStage.setTitle("Sistema de Venda de Ingressos");
 
         AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(450, 400);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
+//        anchorPane.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, red 0%, black 100%);");
 
         // Menu principal
         Label label = new Label("Escolha uma opção: ");
@@ -55,7 +57,7 @@ public class Main extends Application {
 
         anchorPane.getChildren().addAll(label, comprarButton, imprimirButton, estatisticasButton, sairButton);
 
-        Scene scene = new Scene(anchorPane, 800, 600);
+        Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -64,7 +66,13 @@ public class Main extends Application {
         primaryStage.setTitle("Comprar Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(450, 400);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
+
+        Label mensagemLabel = new Label();
+        AnchorPane.setTopAnchor(mensagemLabel, 200.0);
+        AnchorPane.setLeftAnchor(mensagemLabel, 20.0);
+        anchorPane.getChildren().add(mensagemLabel);
 
         Label cpfLabel = new Label("Digite o seu CPF:");
         AnchorPane.setTopAnchor(cpfLabel, 20.0);
@@ -119,19 +127,12 @@ public class Main extends Application {
 
             boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
             if (success) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso");
-                alert.setHeaderText(null);
-                alert.setContentText("Ingresso comprado com sucesso!");
-                alert.showAndWait();
+                mensagemLabel.setText("Ingresso comprado com sucesso!");
                 start(primaryStage);
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Erro");
-                alert.setHeaderText(null);
-                alert.setContentText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
-                alert.showAndWait();
+                mensagemLabel.setText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
             }
+
 
         });
         AnchorPane.setTopAnchor(comprarButton, 170.0);
@@ -141,12 +142,12 @@ public class Main extends Application {
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 200.0);
-        AnchorPane.setLeftAnchor(voltar, 150.0);
+        AnchorPane.setTopAnchor(voltar, 170.0);
+        AnchorPane.setLeftAnchor(voltar, 250.0);
 
         anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
 
-        Scene scene = new Scene(anchorPane, 800, 600);
+        Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -207,41 +208,44 @@ public class Main extends Application {
         primaryStage.setTitle("Imprimir Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(450, 400);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
+        Label mensagem = new Label();
+        mensagem.setStyle("-fx-text-fill:red");
+        AnchorPane.setTopAnchor(mensagem, 45.0);
+        AnchorPane.setLeftAnchor(mensagem, 20.0);
+
         Label cpfLabel = new Label("Digite o seu CPF:");
-        AnchorPane.setTopAnchor(cpfLabel, 20.0);
+        AnchorPane.setTopAnchor(cpfLabel, 3.5);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField cpfInput = new TextField();
         AnchorPane.setTopAnchor(cpfInput, 20.0);
-        AnchorPane.setLeftAnchor(cpfInput, 150.0);
+        AnchorPane.setLeftAnchor(cpfInput, 20.0);
 
         Button imprimirButton = new Button("Imprimir");
         imprimirButton.setOnAction(e -> {
             long cpf = Long.parseLong(cpfInput.getText());
             String result = buscarIngresso(cpf);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ingresso");
-            alert.setHeaderText(null);
-            alert.setContentText(result);
-            alert.showAndWait();
+            mensagem.setText(result);
         });
-        AnchorPane.setTopAnchor(imprimirButton, 50.0);
+        AnchorPane.setTopAnchor(imprimirButton, 65.0);
         AnchorPane.setLeftAnchor(imprimirButton, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 50.0);
-        AnchorPane.setLeftAnchor(voltar, 150.0);
+        AnchorPane.setTopAnchor(voltar, 65.0);
+        AnchorPane.setLeftAnchor(voltar, 122.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
+        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar, mensagem);
 
-        Scene scene = new Scene(anchorPane, 800, 600);
+        Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     private String buscarIngresso(long cpf) {
@@ -273,6 +277,7 @@ public class Main extends Application {
         primaryStage.setTitle("Estatísticas de Vendas");
 
         AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(450, 400);
         anchorPane.setPadding(new Insets(15, 15, 15, 15));
 
         int[] vendasPorPeca = new int[3];
@@ -378,8 +383,7 @@ public class Main extends Application {
         anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
 
         Scene scene = new
-
-                Scene(anchorPane, 800, 600);
+        Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
