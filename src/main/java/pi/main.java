@@ -60,7 +60,7 @@ public class Main {
             if (cpf == retornar) {
                 return;
             }
-
+            
             if (verificarCPF(cpf)) {
                 break;
             } else {
@@ -164,6 +164,9 @@ public class Main {
 
     public static boolean verificarCPF(long cpf) {
         String cpfString = Long.toString(cpf);
+        if (cpfString.length() != 11) {
+            return false;
+        }
         long soma = 0;
 
         int[] array = new int[10];
@@ -240,6 +243,10 @@ public class Main {
         int[] vendasPorPeca = new int[3];
         int[] vendasPorSessao = new int[3];
         double[] lucroPorPeca = new double[3];
+        double[] lucroMaximoPorPeca = new double[3];
+        int[] sessaoMaisLucrativaPorPeca = new int[3];
+        double[] lucroMinimoPorPeca = new double[3];
+        int[] sessaoMenosLucrativaPorPeca = new int[3];
 
         for (int i = 0; i < 3; i++) {
             long[][] peca = switch (i) {
@@ -250,12 +257,22 @@ public class Main {
             };
 
             for (int j = 0; j < peca.length; j++) {
+                double lucroSessao = 0;
                 for (int k = 0; k < peca[j].length; k++) {
                     if (peca[j][k] != 0) {
                         vendasPorPeca[i]++;
                         lucroPorPeca[i] += precoPorPoltrona(k + 1);
                         vendasPorSessao[j]++;
+                        lucroSessao += precoPorPoltrona(k + 1);
                     }
+                }
+                if (lucroSessao > lucroMaximoPorPeca[i]) {
+                    lucroMaximoPorPeca[i] = lucroSessao;
+                    sessaoMaisLucrativaPorPeca[i] = j;
+                }
+                if (lucroSessao < lucroMinimoPorPeca[i] || lucroMinimoPorPeca[i] == 0) {
+                    lucroMinimoPorPeca[i] = lucroSessao;
+                    sessaoMenosLucrativaPorPeca[i] = j;
                 }
             }
         }
@@ -273,7 +290,14 @@ public class Main {
         System.out.println("Sessão com maior ocupação: " + horarios[sessaoMaisOcupada]);
         System.out.println("Sessão com menor ocupação: " + horarios[sessaoMenosOcupada]);
         System.out.println("Lucro médio por peça: R$ " + lucroMedio);
+        System.out.println("Sessão mais lucrativa da peça 1: " + horarios[sessaoMaisLucrativaPorPeca[0]]);
+        System.out.println("Sessão menos lucrativa da peça 1: " + horarios[sessaoMenosLucrativaPorPeca[0]]);
+        System.out.println("Sessão mais lucrativa da peça 2: " + horarios[sessaoMaisLucrativaPorPeca[1]]);
+        System.out.println("Sessão menos lucrativa da peça 2: " + horarios[sessaoMenosLucrativaPorPeca[1]]);
+        System.out.println("Sessão mais lucrativa da peça 3: " + horarios[sessaoMaisLucrativaPorPeca[2]]);
+        System.out.println("Sessão menos lucrativa da peça 3: " + horarios[sessaoMenosLucrativaPorPeca[2]]);
     }
+
 
     private static double precoPorPoltrona(int poltrona) {
         if (poltrona >= 1 && poltrona <= 25) return precos[0];
@@ -304,3 +328,18 @@ public class Main {
         return min;
     }
 }
+
+//0-24 plateia a
+//25-124 plateia b
+//125-129 frisa 1
+//130-134 frisa 2
+//135-139 frisa 3
+//140-144 frisa 4
+//145-149 frisa 5
+//150-154 frisa 6
+//155-164 camarote 1
+//165-174 camarote 2
+//175-184 camarote 3
+//185-194 camarote 4
+//195-204 camarote 5
+//205-254 balcão norte
