@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -25,34 +25,37 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Sistema de Venda de Ingressos");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         // Menu principal
         Label label = new Label("Escolha uma opção: ");
-        GridPane.setConstraints(label, 0, 0);
+        AnchorPane.setTopAnchor(label, 20.0);
+        AnchorPane.setLeftAnchor(label, 20.0);
 
         Button comprarButton = new Button("Comprar Ingresso");
         comprarButton.setOnAction(e -> comprarIngresso(primaryStage));
-        GridPane.setConstraints(comprarButton, 0, 1);
+        AnchorPane.setTopAnchor(comprarButton, 50.0);
+        AnchorPane.setLeftAnchor(comprarButton, 20.0);
 
         Button imprimirButton = new Button("Imprimir Ingresso");
         imprimirButton.setOnAction(e -> imprimirIngresso(primaryStage));
-        GridPane.setConstraints(imprimirButton, 0, 2);
+        AnchorPane.setTopAnchor(imprimirButton, 80.0);
+        AnchorPane.setLeftAnchor(imprimirButton, 20.0);
 
         Button estatisticasButton = new Button("Estatísticas de Vendas");
         estatisticasButton.setOnAction(e -> estatisticasVendas(primaryStage));
-        GridPane.setConstraints(estatisticasButton, 0, 3);
+        AnchorPane.setTopAnchor(estatisticasButton, 110.0);
+        AnchorPane.setLeftAnchor(estatisticasButton, 20.0);
 
         Button sairButton = new Button("Sair");
         sairButton.setOnAction(e -> System.exit(0));
-        GridPane.setConstraints(sairButton, 0, 4);
+        AnchorPane.setTopAnchor(sairButton, 140.0);
+        AnchorPane.setLeftAnchor(sairButton, 20.0);
 
-        grid.getChildren().addAll(label, comprarButton, imprimirButton, estatisticasButton, sairButton);
+        anchorPane.getChildren().addAll(label, comprarButton, imprimirButton, estatisticasButton, sairButton);
 
-        Scene scene = new Scene(grid, 800, 600);
+        Scene scene = new Scene(anchorPane, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -60,43 +63,51 @@ public class Main extends Application {
     private void comprarIngresso(Stage primaryStage) {
         primaryStage.setTitle("Comprar Ingresso");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         Label cpfLabel = new Label("Digite o seu CPF:");
-        GridPane.setConstraints(cpfLabel, 0, 0);
+        AnchorPane.setTopAnchor(cpfLabel, 20.0);
+        AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField cpfInput = new TextField();
-        GridPane.setConstraints(cpfInput, 1, 0);
+        AnchorPane.setTopAnchor(cpfInput, 20.0);
+        AnchorPane.setLeftAnchor(cpfInput, 150.0);
 
         Label pecaLabel = new Label("Escolha a peça:");
-        GridPane.setConstraints(pecaLabel, 0, 1);
+        AnchorPane.setTopAnchor(pecaLabel, 50.0);
+        AnchorPane.setLeftAnchor(pecaLabel, 20.0);
 
         ChoiceBox<String> pecaChoice = new ChoiceBox<>();
         pecaChoice.getItems().addAll(pecas);
-        GridPane.setConstraints(pecaChoice, 1, 1);
+        AnchorPane.setTopAnchor(pecaChoice, 50.0);
+        AnchorPane.setLeftAnchor(pecaChoice, 150.0);
 
         Label horarioLabel = new Label("Escolha o horário:");
-        GridPane.setConstraints(horarioLabel, 0, 2);
+        AnchorPane.setTopAnchor(horarioLabel, 80.0);
+        AnchorPane.setLeftAnchor(horarioLabel, 20.0);
 
         ChoiceBox<String> horarioChoice = new ChoiceBox<>();
         horarioChoice.getItems().addAll(horarios);
-        GridPane.setConstraints(horarioChoice, 1, 2);
+        AnchorPane.setTopAnchor(horarioChoice, 80.0);
+        AnchorPane.setLeftAnchor(horarioChoice, 150.0);
 
         Label areaLabel = new Label("Escolha a área:");
-        GridPane.setConstraints(areaLabel, 0, 3);
+        AnchorPane.setTopAnchor(areaLabel, 110.0);
+        AnchorPane.setLeftAnchor(areaLabel, 20.0);
 
         ChoiceBox<String> areaChoice = new ChoiceBox<>();
         areaChoice.getItems().addAll(areas);
-        GridPane.setConstraints(areaChoice, 1, 3);
+        AnchorPane.setTopAnchor(areaChoice, 110.0);
+        AnchorPane.setLeftAnchor(areaChoice, 150.0);
 
         Label poltronaLabel = new Label("Escolha a poltrona:");
-        GridPane.setConstraints(poltronaLabel, 0, 4);
+        AnchorPane.setTopAnchor(poltronaLabel, 140.0);
+        AnchorPane.setLeftAnchor(poltronaLabel, 20.0);
 
         TextField poltronaInput = new TextField();
-        GridPane.setConstraints(poltronaInput, 1, 4);
+        AnchorPane.setTopAnchor(poltronaInput, 140.0);
+        AnchorPane.setLeftAnchor(poltronaInput, 150.0);
 
         Button comprarButton = new Button("Comprar");
         comprarButton.setOnAction(e -> {
@@ -123,19 +134,23 @@ public class Main extends Application {
             }
 
         });
-        GridPane.setConstraints(comprarButton, 1, 5);
+        AnchorPane.setTopAnchor(comprarButton, 170.0);
+        AnchorPane.setLeftAnchor(comprarButton, 150.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 1, 10);
+        AnchorPane.setTopAnchor(voltar, 200.0);
+        AnchorPane.setLeftAnchor(voltar, 150.0);
 
-        grid.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
+        anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
 
-        Scene scene = new Scene(grid, 800, 600);
+        Scene scene = new Scene(anchorPane, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
 
     private boolean comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
@@ -191,16 +206,16 @@ public class Main extends Application {
     private void imprimirIngresso(Stage primaryStage) {
         primaryStage.setTitle("Imprimir Ingresso");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setHgap(10);
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         Label cpfLabel = new Label("Digite o seu CPF:");
-        GridPane.setConstraints(cpfLabel, 0, 0);
+        AnchorPane.setTopAnchor(cpfLabel, 20.0);
+        AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField cpfInput = new TextField();
-        GridPane.setConstraints(cpfInput, 1, 0);
+        AnchorPane.setTopAnchor(cpfInput, 20.0);
+        AnchorPane.setLeftAnchor(cpfInput, 150.0);
 
         Button imprimirButton = new Button("Imprimir");
         imprimirButton.setOnAction(e -> {
@@ -212,17 +227,19 @@ public class Main extends Application {
             alert.setContentText(result);
             alert.showAndWait();
         });
-        GridPane.setConstraints(imprimirButton, 0, 1);
+        AnchorPane.setTopAnchor(imprimirButton, 50.0);
+        AnchorPane.setLeftAnchor(imprimirButton, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 1, 1);
+        AnchorPane.setTopAnchor(voltar, 50.0);
+        AnchorPane.setLeftAnchor(voltar, 150.0);
 
-        grid.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
+        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar);
 
-        Scene scene = new Scene(grid, 800, 600);
+        Scene scene = new Scene(anchorPane, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -255,10 +272,8 @@ public class Main extends Application {
     private void estatisticasVendas(Stage primaryStage) {
         primaryStage.setTitle("Estatísticas de Vendas");
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(15, 15, 15, 15));
-        grid.setVgap(16);
-        grid.setHgap(20);
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPadding(new Insets(15, 15, 15, 15));
 
         int[] vendasPorPeca = new int[3];
         int[] vendasPorSessao = new int[3];
@@ -305,82 +320,106 @@ public class Main extends Application {
         double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
 
         Label totalVendasLabel = new Label("Total de vendas: " + totalVendas);
-        GridPane.setConstraints(totalVendasLabel, 0, 0);
-        GridPane.setConstraints(totalVendasLabel, 0, 0);
+        AnchorPane.setTopAnchor(totalVendasLabel, 20.0);
+        AnchorPane.setLeftAnchor(totalVendasLabel, 20.0);
 
         Label pecaMaisVendidaLabel = new Label("Peça com mais ingressos vendidos: " + pecas[pecaMaisVendida]);
-        GridPane.setConstraints(pecaMaisVendidaLabel, 0, 1);
+        AnchorPane.setTopAnchor(pecaMaisVendidaLabel, 50.0);
+        AnchorPane.setLeftAnchor(pecaMaisVendidaLabel, 20.0);
 
         Label pecaMenosVendidaLabel = new Label("Peça com menos ingressos vendidos: " + pecas[pecaMenosVendida]);
-        GridPane.setConstraints(pecaMenosVendidaLabel, 0, 2);
+        AnchorPane.setTopAnchor(pecaMenosVendidaLabel, 80.0);
+        AnchorPane.setLeftAnchor(pecaMenosVendidaLabel, 20.0);
 
         Label sessaoMaisOcupadaLabel = new Label("Sessão com maior ocupação: " + horarios[sessaoMaisOcupada]);
-        GridPane.setConstraints(sessaoMaisOcupadaLabel, 0, 3);
+        AnchorPane.setTopAnchor(sessaoMaisOcupadaLabel, 110.0);
+        AnchorPane.setLeftAnchor(sessaoMaisOcupadaLabel, 20.0);
 
         Label sessaoMenosOcupadaLabel = new Label("Sessão com menor ocupação: " + horarios[sessaoMenosOcupada]);
-        GridPane.setConstraints(sessaoMenosOcupadaLabel, 0, 4);
+        AnchorPane.setTopAnchor(sessaoMenosOcupadaLabel, 140.0);
+        AnchorPane.setLeftAnchor(sessaoMenosOcupadaLabel, 20.0);
 
         Label lucroMedioLabel = new Label("Lucro médio por peça: R$ " + lucroMedio);
-        GridPane.setConstraints(lucroMedioLabel, 0, 5);
+        AnchorPane.setTopAnchor(lucroMedioLabel, 170.0);
+        AnchorPane.setLeftAnchor(lucroMedioLabel, 20.0);
 
         Label sessaoMais1 = new Label("Sessão mais lucrativa da peça 1:  " + horarios[sessaoMaisLucrativaPorPeca[0]]);
-        GridPane.setConstraints(sessaoMais1, 0, 6);
+        AnchorPane.setTopAnchor(sessaoMais1, 200.0);
+        AnchorPane.setLeftAnchor(sessaoMais1, 20.0);
 
         Label sessaoMenos1 = new Label("Sessão menos lucrativa da peça 1:  " + horarios[sessaoMenosLucrativaPorPeca[0]]);
-        GridPane.setConstraints(sessaoMenos1, 0, 7);
+        AnchorPane.setTopAnchor(sessaoMenos1, 230.0);
+        AnchorPane.setLeftAnchor(sessaoMenos1, 20.0);
 
         Label sessaoMais2 = new Label("Sessão mais lucrativa da peça 2:  " + horarios[sessaoMaisLucrativaPorPeca[1]]);
-        GridPane.setConstraints(sessaoMais2, 0, 8);
+        AnchorPane.setTopAnchor(sessaoMais2, 260.0);
+        AnchorPane.setLeftAnchor(sessaoMais2, 20.0);
 
         Label sessaoMenos2 = new Label("Sessão menos lucrativa da peça 2: " + horarios[sessaoMenosLucrativaPorPeca[1]]);
-        GridPane.setConstraints(sessaoMenos2, 0, 9);
+        AnchorPane.setTopAnchor(sessaoMenos2, 290.0);
+        AnchorPane.setLeftAnchor(sessaoMenos2, 20.0);
 
         Label sessaoMais3 = new Label("Sessão mais lucrativa da peça 3: " + horarios[sessaoMaisLucrativaPorPeca[2]]);
-        GridPane.setConstraints(sessaoMais3, 0, 10);
+        AnchorPane.setTopAnchor(sessaoMais3, 320.0);
+        AnchorPane.setLeftAnchor(sessaoMais3, 20.0);
 
         Label sessaoMenos3 = new Label("Sessão menos lucrativa da peça 3: " + horarios[sessaoMenosLucrativaPorPeca[2]]);
-        GridPane.setConstraints(sessaoMenos3, 0, 11);
+        AnchorPane.setTopAnchor(sessaoMenos3, 350.0);
+        AnchorPane.setLeftAnchor(sessaoMenos3, 20.0);
 
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        GridPane.setConstraints(voltar, 0, 12);
+        AnchorPane.setTopAnchor(voltar, 380.0);
+        AnchorPane.setLeftAnchor(voltar, 20.0);
 
-        grid.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
+        anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
 
-        Scene scene = new Scene(grid, 800, 600);
+        Scene scene = new
+
+                Scene(anchorPane, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     private double precoPorPoltrona(int poltrona) {
-        if (poltrona >= 1 && poltrona <= 25) return precos[0];
-        if (poltrona >= 26 && poltrona <= 125) return precos[1];
-        if (poltrona >= 126 && poltrona <= 155) return precos[2];
-        if (poltrona >= 156 && poltrona <= 205) return precos[3];
-        if (poltrona >= 206 && poltrona <= 255) return precos[4];
+        if (poltrona >= 1 && poltrona <= 25) {
+            return precos[0];
+        } else if (poltrona >= 26 && poltrona <= 125) {
+            return precos[1];
+        } else if (poltrona >= 126 && poltrona <= 155) {
+            return precos[2];
+        } else if (poltrona >= 156 && poltrona <= 205) {
+            return precos[3];
+        } else if (poltrona >= 206 && poltrona <= 255) {
+            return precos[4];
+        }
         return 0;
     }
 
-    private int maisVendido(int[] array) {
-        int max = 0;
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] > array[max]) {
-                max = i;
+    private int maisVendido(int[] vendas) {
+        int max = vendas[0];
+        int index = 0;
+        for (int i = 1; i < vendas.length; i++) {
+            if (vendas[i] > max) {
+                max = vendas[i];
+                index = i;
             }
         }
-        return max;
+        return index;
     }
 
-    private int menosVendido(int[] array) {
-        int min = 0;
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] < array[min]) {
-                min = i;
+    private int menosVendido(int[] vendas) {
+        int min = vendas[0];
+        int index = 0;
+        for (int i = 1; i < vendas.length; i++) {
+            if (vendas[i] < min) {
+                min = vendas[i];
+                index = i;
             }
         }
-        return min;
+        return index;
     }
 }
