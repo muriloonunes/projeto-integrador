@@ -1,6 +1,7 @@
 package pi;
 
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
@@ -23,27 +24,34 @@ public class Main {
             System.out.println("2. Imprimir Ingresso");
             System.out.println("3. Estatísticas de Vendas");
             System.out.println("4. Sair");
-            int opcao = ler.nextInt();
 
-            switch (opcao) {
-                case 1:
-                    comprarIngresso(ler);
-                    break;
-                case 2:
-                    imprimirIngresso(ler);
-                    break;
-                case 3:
-                    estatisticasVendas();
-                    break;
-                case 4:
-                    System.out.println("Saindo...");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
+            try {
+                int opcao = ler.nextInt();
+                switch (opcao) {
+                    case 1:
+                        comprarIngresso(ler);
+                        break;
+                    case 2:
+                        imprimirIngresso(ler);
+                        break;
+                    case 3:
+                        estatisticasVendas();
+                        break;
+                    case 4:
+                        System.out.println("Saindo...");
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Digite um número inteiro.");
+                ler.nextLine();
             }
         }
-    }
+
+
+        }
 
     public static void comprarIngresso(Scanner ler) {
 
@@ -60,7 +68,7 @@ public class Main {
             if (cpf == retornar) {
                 return;
             }
-            
+
             if (verificarCPF(cpf)) {
                 break;
             } else {
@@ -176,7 +184,7 @@ public class Main {
         }
 
         for (int i = 0; i < array.length; i++) {
-            soma+=array[i];
+            soma += array[i];
         }
 
         return soma % 11 == 0;
