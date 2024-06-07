@@ -24,7 +24,6 @@ public class Main {
             System.out.println("2. Imprimir Ingresso");
             System.out.println("3. Estatísticas de Vendas");
             System.out.println("4. Sair");
-
             try {
                 int opcao = ler.nextInt();
                 switch (opcao) {
@@ -45,13 +44,13 @@ public class Main {
                         System.out.println("Opção inválida. Tente novamente.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Digite um número inteiro.");
+                System.out.println("Digite apenas um algarismo.");
                 ler.nextLine();
             }
         }
 
 
-        }
+    }
 
     public static void comprarIngresso(Scanner ler) {
 
@@ -63,88 +62,115 @@ public class Main {
         System.out.print("Digite o seu CPF ou " + retornar + " para voltar ao menu inicial: ");
         long cpf;
         while (true) {
-            cpf = ler.nextLong();
+            try {
+                cpf = ler.nextLong();
 
-            if (cpf == retornar) {
-                return;
-            }
+                if (cpf == retornar) {
+                    return;
+                } else {
+                    break;
+                }
 
-            if (verificarCPF(cpf)) {
-                break;
-            } else {
-                System.out.println("Cpf inválido! Tente novamente!");
+//                if (verificarCPF(cpf)) {
+//                    break;
+//                } else {
+//                    System.out.println("Cpf inválido! Tente novamente!");
+//                }
+            } catch (InputMismatchException e) {
+                System.out.println("Digite apenas números");
+                ler.nextLine();
             }
         }
 
+        System.out.println("""
+                Digite para qual peça você quer o ingresso
+                1 - Peça 1
+                2 - Peça 2
+                3 - Peça 3
+                """);
         int peca;
         while (true) {
-            System.out.println("""
-                    Digite para qual peça você quer o ingresso
-                    1 - Peça 1
-                    2 - Peça 2
-                    3 - Peça 3
-                    """);
-            peca = ler.nextInt();
+            try {
+                peca = ler.nextInt();
 
-            if (peca == retornar) {
-                return;
-            }
+                if (peca == retornar) {
+                    return;
+                }
 
-            if (peca == 1 || peca == 2 || peca == 3) {
-                break;
-            } else {
-                System.out.println("Peça inválida! Por favor, digite 1, 2 ou 3.");
+                if (peca == 1 || peca == 2 || peca == 3) {
+                    break;
+                } else {
+                    System.out.println("Peça inválida! Por favor, digite 1, 2 ou 3.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Digite apenas um algarismo");
+                ler.nextLine();
             }
         }
 
-        System.out.println("Digite horário da peça: 1 (manhã), 2 (tarde), 3 (noite) ou " + retornar + " para voltar ao menu inicial: ");
+        System.out.println("Escolha o horário da peça: 1 (manhã), 2 (tarde), 3 (noite) ou " + retornar + " para voltar ao menu inicial: ");
         int horario;
         while (true) {
-            horario = ler.nextInt();
+            try {
+                horario = ler.nextInt();
 
-            if (horario == retornar) {
-                return;
-            }
+                if (horario == retornar) {
+                    return;
+                }
 
-            if (horario >= 1 && horario <= 3) {
-                break;
-            } else {
-                System.out.println("Horário inválido! Por favor, digite 1 (manhã), 2 (tarde) ou 3 (noite).");
+                if (horario >= 1 && horario <= 3) {
+                    break;
+                } else {
+                    System.out.println("Horário inválido! Por favor, digite 1 (manhã), 2 (tarde) ou 3 (noite).");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Digite apenas um algarismo");
+                ler.nextLine();
             }
         }
 
+        System.out.println("Escolha a área ou " + retornar + " para voltar ao menu inicial: ");
+        for (int i = 0; i < areas.length; i++) {
+            System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronas[i][0] + " a " + poltronas[i][1] + ")");
+        }
         int areaEscolhida;
         while (true) {
-            System.out.println("Escolha a área ou " + retornar + " para voltar ao menu inicial: ");
-            for (int i = 0; i < areas.length; i++) {
-                System.out.println((i + 1) + ". " + areas[i] + " (R$ " + precos[i] + ") (poltronas " + poltronas[i][0] + " a " + poltronas[i][1] + ")");
-            }
-            areaEscolhida = ler.nextInt();
+            try {
+                areaEscolhida = ler.nextInt();
 
-            if (areaEscolhida == retornar) {
-                return;
-            }
+                if (areaEscolhida == retornar) {
+                    return;
+                }
 
-            if (areaEscolhida >= 1 && areaEscolhida <= 5) {
-                break;
-            } else {
-                System.out.println("Área inválida! Por favor, escolha uma área entre 1 e 5.");
+                if (areaEscolhida >= 1 && areaEscolhida <= 5) {
+                    break;
+                } else {
+                    System.out.println("Área inválida! Por favor, escolha uma área entre 1 e 5.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Digite apenas um algarismo");
+                ler.nextLine();
             }
         }
 
+        System.out.print("Digite o número da poltrona desejada ou " + retornar + " para voltar ao menu inicial: ");
         int poltrona;
         while (true) {
-            System.out.print("Digite o número da poltrona desejada ou " + retornar + " para voltar ao menu inicial: ");
-            poltrona = ler.nextInt();
+            try {
+                poltrona = ler.nextInt();
 
-            if (poltrona == retornar) {
-                return;
-            }
+                if (poltrona == retornar) {
+                    return;
+                }
 
-            if (validarPoltrona(areaEscolhida, poltrona)) {
-                break;
-            } else {
-                System.out.println("Número de poltrona inválido para a área escolhida! Por favor, escolha uma poltrona válida.");
+                if (validarPoltrona(areaEscolhida, poltrona)) {
+                    break;
+                } else {
+                    System.out.println("Número de poltrona inválido para a área escolhida! Por favor, escolha uma poltrona válida.");
+                }
+            }catch (InputMismatchException e) {
+                System.out.println("Digite apenas um algarismo");
+                ler.nextLine();
             }
         }
 
@@ -212,10 +238,19 @@ public class Main {
 
     public static void imprimirIngresso(Scanner ler) {
         System.out.print("Digite o seu CPF: ");
-        long cpf = ler.nextLong();
-
-        if (cpf == retornar) {
-            return;
+        long cpf;
+        while (true) {
+            try {
+                cpf = ler.nextLong();
+                if (cpf == retornar) {
+                    return;
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Digite apenas números");
+                ler.nextLine();
+            }
         }
 
         boolean encontrado = false;
