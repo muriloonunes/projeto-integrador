@@ -1,5 +1,3 @@
-package pi;
-
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
@@ -48,8 +46,6 @@ public class Main {
                 ler.nextLine();
             }
         }
-
-
     }
 
     public static void comprarIngresso(Scanner ler) {
@@ -191,36 +187,32 @@ public class Main {
     }
 
     public static boolean verificarCPF(long cpf) {
-        String cpfString = Long.toString(cpf);
+        String cpfString = String.format("%011d", cpf);
         if (cpfString.length() != 11) {
             return false;
         }
+        int[] cpfArray = new int[11];
+        for (int i = 0; i < 11; i++) {
+            cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
+        }
 
-        // Calculando o primeiro dígito verificador
         int soma = 0;
+        int peso = 10;
         for (int i = 0; i < 9; i++) {
-            int digito = Character.getNumericValue(cpfString.charAt(i));
-            soma += digito * (10 - i);
+            soma += cpfArray[i] * peso;
+            peso--;
         }
-        int resto = soma % 11;
-        int digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
+        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
 
-        // Verificando o primeiro dígito verificador
-        if (digitoVerificador1 != Character.getNumericValue(cpfString.charAt(9))) {
-            return false;
-        }
-
-        // Calculando o segundo dígito verificador
         soma = 0;
+        peso = 11;
         for (int i = 0; i < 10; i++) {
-            int digito = Character.getNumericValue(cpfString.charAt(i));
-            soma += digito * (11 - i);
+            soma += cpfArray[i] * peso;
+            peso--;
         }
-        resto = soma % 11;
-        int digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
+        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
 
-        // Verificando o segundo dígito verificador
-        return digitoVerificador2 == Character.getNumericValue(cpfString.charAt(10));
+        return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
     }
 
     private static int verificarHorario(int horario) {
