@@ -62,24 +62,18 @@ public class Main {
         System.out.print("Digite o seu CPF ou " + retornar + " para voltar ao menu inicial: ");
         long cpf;
         while (true) {
-            try {
-                cpf = ler.nextLong();
 
-                if (cpf == retornar) {
-                    return;
-                } else {
-                    break;
-                }
+            cpf = ler.nextLong();
 
-//                if (verificarCPF(cpf)) {
-//                    break;
-//                } else {
-//                    System.out.println("Cpf inválido! Tente novamente!");
-//                }
-            } catch (InputMismatchException e) {
-                System.out.println("Digite apenas números");
-                ler.nextLine();
+            if (cpf == retornar) {
+                return;
             }
+            if (verificarCPF(cpf)) {
+                break;
+            } else {
+                System.out.println("Cpf inválido! Tente novamente!");
+            }
+
         }
 
         System.out.println("""
@@ -168,7 +162,7 @@ public class Main {
                 } else {
                     System.out.println("Número de poltrona inválido para a área escolhida! Por favor, escolha uma poltrona válida.");
                 }
-            }catch (InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Digite apenas um algarismo");
                 ler.nextLine();
             }
@@ -201,19 +195,32 @@ public class Main {
         if (cpfString.length() != 11) {
             return false;
         }
-        long soma = 0;
 
-        int[] array = new int[10];
+        // Calculando o primeiro dígito verificador
+        int soma = 0;
+        for (int i = 0; i < 9; i++) {
+            int digito = Character.getNumericValue(cpfString.charAt(i));
+            soma += digito * (10 - i);
+        }
+        int resto = soma % 11;
+        int digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
 
-        for (int i = 0; i < array.length; i++) {
-            array[i] = Integer.parseInt(cpfString.substring(i, i + 1));
+        // Verificando o primeiro dígito verificador
+        if (digitoVerificador1 != Character.getNumericValue(cpfString.charAt(9))) {
+            return false;
         }
 
-        for (int i = 0; i < array.length; i++) {
-            soma += array[i];
+        // Calculando o segundo dígito verificador
+        soma = 0;
+        for (int i = 0; i < 10; i++) {
+            int digito = Character.getNumericValue(cpfString.charAt(i));
+            soma += digito * (11 - i);
         }
+        resto = soma % 11;
+        int digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
 
-        return soma % 11 == 0;
+        // Verificando o segundo dígito verificador
+        return digitoVerificador2 == Character.getNumericValue(cpfString.charAt(10));
     }
 
     private static int verificarHorario(int horario) {
@@ -371,18 +378,3 @@ public class Main {
         return min;
     }
 }
-
-//0-24 plateia a
-//25-124 plateia b
-//125-129 frisa 1
-//130-134 frisa 2
-//135-139 frisa 3
-//140-144 frisa 4
-//145-149 frisa 5
-//150-154 frisa 6
-//155-164 camarote 1
-//165-174 camarote 2
-//175-184 camarote 3
-//185-194 camarote 4
-//195-204 camarote 5
-//205-254 balcão norte
