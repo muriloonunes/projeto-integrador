@@ -4,13 +4,19 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Main extends Application {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
     static String[] horarios = {"Manhã", "Tarde", "Noite"};
-    static String[] areas = {"Plateia A", "Plateia B", "Frisa", "Camarote", "Balcão Nobre"};
+    static String[] areas = {"Plateia A (poltronas 1 a 25)", "Plateia B (poltronas 26 a 125)", "Frisa (poltronas 126 a 155)", "Camarote (poltronas 156 a 205)", "Balcão Nobre (poltronas 206 a 255)"};
     static double[] precos = {40.00, 60.00, 120.00, 80.00, 250.00};
     static long[][] p1 = new long[3][255];
     static long[][] p2 = new long[3][255];
@@ -26,7 +32,7 @@ public class Main extends Application {
         primaryStage.setTitle("Sistema de Venda de Ingressos");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(450, 400);
+        anchorPane.setPrefSize(750, 200);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 //        anchorPane.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, red 0%, black 100%);");
 
@@ -36,7 +42,13 @@ public class Main extends Application {
         AnchorPane.setLeftAnchor(label, 20.0);
 
         Button comprarButton = new Button("Comprar Ingresso");
-        comprarButton.setOnAction(e -> comprarIngresso(primaryStage));
+        comprarButton.setOnAction(e -> {
+            try {
+                comprarIngresso(primaryStage);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         AnchorPane.setTopAnchor(comprarButton, 50.0);
         AnchorPane.setLeftAnchor(comprarButton, 20.0);
 
@@ -62,95 +74,112 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void comprarIngresso(Stage primaryStage) {
+    private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
         primaryStage.setTitle("Comprar Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(450, 400);
+        anchorPane.setPrefSize(750, 200);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
-        Label mensagemLabel = new Label();
-        AnchorPane.setTopAnchor(mensagemLabel, 200.0);
-        AnchorPane.setLeftAnchor(mensagemLabel, 20.0);
-        anchorPane.getChildren().add(mensagemLabel);
+        Image image = new Image(new FileInputStream("C:\\Users\\Aluno\\Documents\\intellij\\projeto integrador fx\\teatro.jpg"));
+        ImageView imgItem = new ImageView(image);
+        imgItem.setFitWidth(600);
+        imgItem.setFitHeight(600);
+        AnchorPane.setTopAnchor(imgItem, 10.0);
+        AnchorPane.setRightAnchor(imgItem, 10.0);
+
+        Label mensagem = new Label();
+        AnchorPane.setTopAnchor(mensagem, 250.0);
+        AnchorPane.setLeftAnchor(mensagem, 20.0);
+        mensagem.setStyle("-fx-text-fill:red");
 
         Label cpfLabel = new Label("Digite o seu CPF:");
         AnchorPane.setTopAnchor(cpfLabel, 20.0);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField cpfInput = new TextField();
-        AnchorPane.setTopAnchor(cpfInput, 20.0);
-        AnchorPane.setLeftAnchor(cpfInput, 150.0);
+        AnchorPane.setTopAnchor(cpfInput, 40.0);
+        AnchorPane.setLeftAnchor(cpfInput, 20.0);
 
         Label pecaLabel = new Label("Escolha a peça:");
-        AnchorPane.setTopAnchor(pecaLabel, 50.0);
+        AnchorPane.setTopAnchor(pecaLabel, 70.0);
         AnchorPane.setLeftAnchor(pecaLabel, 20.0);
 
         ChoiceBox<String> pecaChoice = new ChoiceBox<>();
         pecaChoice.getItems().addAll(pecas);
-        AnchorPane.setTopAnchor(pecaChoice, 50.0);
-        AnchorPane.setLeftAnchor(pecaChoice, 150.0);
+        AnchorPane.setTopAnchor(pecaChoice, 90.0);
+        AnchorPane.setLeftAnchor(pecaChoice, 20.0);
 
         Label horarioLabel = new Label("Escolha o horário:");
-        AnchorPane.setTopAnchor(horarioLabel, 80.0);
+        AnchorPane.setTopAnchor(horarioLabel, 115.0);
         AnchorPane.setLeftAnchor(horarioLabel, 20.0);
 
         ChoiceBox<String> horarioChoice = new ChoiceBox<>();
         horarioChoice.getItems().addAll(horarios);
-        AnchorPane.setTopAnchor(horarioChoice, 80.0);
-        AnchorPane.setLeftAnchor(horarioChoice, 150.0);
+        AnchorPane.setTopAnchor(horarioChoice, 135.0);
+        AnchorPane.setLeftAnchor(horarioChoice, 20.0);
 
         Label areaLabel = new Label("Escolha a área:");
-        AnchorPane.setTopAnchor(areaLabel, 110.0);
+        AnchorPane.setTopAnchor(areaLabel, 160.0);
         AnchorPane.setLeftAnchor(areaLabel, 20.0);
 
         ChoiceBox<String> areaChoice = new ChoiceBox<>();
         areaChoice.getItems().addAll(areas);
-        AnchorPane.setTopAnchor(areaChoice, 110.0);
-        AnchorPane.setLeftAnchor(areaChoice, 150.0);
+        AnchorPane.setTopAnchor(areaChoice, 175.0);
+        AnchorPane.setLeftAnchor(areaChoice, 20.0);
 
         Label poltronaLabel = new Label("Escolha a poltrona:");
-        AnchorPane.setTopAnchor(poltronaLabel, 140.0);
+        AnchorPane.setTopAnchor(poltronaLabel, 205.0);
         AnchorPane.setLeftAnchor(poltronaLabel, 20.0);
 
         TextField poltronaInput = new TextField();
-        AnchorPane.setTopAnchor(poltronaInput, 140.0);
-        AnchorPane.setLeftAnchor(poltronaInput, 150.0);
+        AnchorPane.setTopAnchor(poltronaInput, 220.0);
+        AnchorPane.setLeftAnchor(poltronaInput, 20.0);
 
         Button comprarButton = new Button("Comprar");
         comprarButton.setOnAction(e -> {
-            long cpf = Long.parseLong(cpfInput.getText());
-            int peca = pecaChoice.getSelectionModel().getSelectedIndex();
-            int horario = horarioChoice.getSelectionModel().getSelectedIndex();
-            int area = areaChoice.getSelectionModel().getSelectedIndex();
-            int poltrona = Integer.parseInt(poltronaInput.getText());
-
-            boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
-            if (success) {
-                mensagemLabel.setText("Ingresso comprado com sucesso!");
-                start(primaryStage);
+            if (cpfInput.getText().isEmpty() || pecaChoice.getSelectionModel().isEmpty() || horarioChoice.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() || poltronaInput.getText().isEmpty()) {
+                mensagem.setText("Por favor, preencha todos os campos.");
             } else {
-                mensagemLabel.setText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
+                try {
+                    long cpf = Long.parseLong(cpfInput.getText());
+                    int peca = pecaChoice.getSelectionModel().getSelectedIndex();
+                    int horario = horarioChoice.getSelectionModel().getSelectedIndex();
+                    int area = areaChoice.getSelectionModel().getSelectedIndex();
+                    int poltrona = Integer.parseInt(poltronaInput.getText());
+
+                    boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
+                    if (success) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Sucesso!");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Ingresso comprado com sucesso!");
+                        alert.showAndWait();
+
+                        start(primaryStage);
+                    } else {
+                        mensagem.setText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
+                    }
+                } catch (NumberFormatException ex) {
+                    mensagem.setText("Erro: Por favor, insira um CPF válido e um número de poltrona válido.");
+                }
             }
-
-
         });
-        AnchorPane.setTopAnchor(comprarButton, 170.0);
-        AnchorPane.setLeftAnchor(comprarButton, 150.0);
+        AnchorPane.setTopAnchor(comprarButton, 270.0);
+        AnchorPane.setLeftAnchor(comprarButton, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 170.0);
-        AnchorPane.setLeftAnchor(voltar, 250.0);
+        AnchorPane.setTopAnchor(voltar, 270.0);
+        AnchorPane.setLeftAnchor(voltar, 120.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar);
+        anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar, mensagem, imgItem);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
-
 
     }
 
@@ -226,9 +255,18 @@ public class Main extends Application {
 
         Button imprimirButton = new Button("Imprimir");
         imprimirButton.setOnAction(e -> {
-            long cpf = Long.parseLong(cpfInput.getText());
-            String result = buscarIngresso(cpf);
-            mensagem.setText(result);
+            String cpfText = cpfInput.getText();
+            if (!cpfText.isEmpty()) {
+                try {
+                    long cpf = Long.parseLong(cpfText);
+                    String result = buscarIngresso(cpf);
+                    mensagem.setText(result);
+                } catch (NumberFormatException ex) {
+                    mensagem.setText("CPF inválido");
+                }
+            } else {
+                mensagem.setText("Digite algo válido");
+            }
         });
         AnchorPane.setTopAnchor(imprimirButton, 65.0);
         AnchorPane.setLeftAnchor(imprimirButton, 20.0);
