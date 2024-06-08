@@ -330,8 +330,9 @@ public class Main extends Application {
             for (int j = 0; j < peca.length; j++) {
                 for (int k = 0; k < peca[j].length; k++) {
                     if (peca[j][k] == cpf) {
+                        String cpfFormatado = String.format("%011d", cpf);
                         return "Ingresso encontrado:\n" +
-                                "CPF: " + cpf + "\n" +
+                                "CPF: " + cpfFormatado + "\n" +
                                 "Peça: " + nomePeca + "\n" +
                                 "Sessão: " + horarios[j] + "\n" +
                                 "Poltrona: " + (k + 1);
