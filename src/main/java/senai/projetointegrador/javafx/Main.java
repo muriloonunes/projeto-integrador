@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -244,7 +242,7 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(mensagem, 100.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
 
-        Label cpfLabel = new Label("Digite o seu CPF:");''
+        Label cpfLabel = new Label("Digite o seu CPF:");
         AnchorPane.setTopAnchor(cpfLabel, 3.5);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
@@ -420,7 +418,7 @@ public class Main extends Application {
         anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
 
         Scene scene = new
-        Scene(anchorPane);
+                Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
