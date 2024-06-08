@@ -79,7 +79,7 @@ public class Main extends Application {
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
-        Image image = new Image(new FileInputStream("C:\\Users\\Aluno\\Documents\\intellij\\projeto integrador fx\\teatro.jpg"));
+        Image image = new Image(new FileInputStream("images/teatro.jpg"));
         ImageView imgItem = new ImageView(image);
         imgItem.setFitWidth(827);
         imgItem.setFitHeight(632);
@@ -140,7 +140,13 @@ public class Main extends Application {
                 mensagem.setText("Por favor, preencha todos os campos.");
             } else {
                 try {
-                    long cpf = Long.parseLong(cpfInput.getText());
+                    String cpfText = cpfInput.getText();
+                    if (!isCPFValid(cpfText)) {
+                        mensagem.setText("CPF inválido. Por favor, insira um CPF válido.");
+                        return;
+                    }
+
+                    long cpf = Long.parseLong(cpfText);
                     int peca = pecaChoice.getSelectionModel().getSelectedIndex();
                     int horario = horarioChoice.getSelectionModel().getSelectedIndex();
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
@@ -281,6 +287,34 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+    }
+    public static boolean isCPFValid(String CPF) {
+        CPF = CPF.replaceAll("[^0-9]", ""); // Remove tudo que não for número
+        if (CPF.length() != 11 || CPF.matches("(\\d)\\1{10}")) return false; // Valida tamanho e se todos os dígitos são iguais
+
+        int[] pesos = {10, 9, 8, 7, 6, 5, 4, 3, 2};
+        int soma = 0;
+
+        for (int i = 0; i < 9; i++) {
+            soma += (CPF.charAt(i) - '0') * pesos[i];
+        }
+
+        int resto = 11 - (soma % 11);
+        char digito1 = (resto > 9) ? '0' : (char) (resto + '0');
+
+        if (CPF.charAt(9) != digito1) return false;
+
+        pesos = new int[]{11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+        soma = 0;
+
+        for (int i = 0; i < 10; i++) {
+            soma += (CPF.charAt(i) - '0') * pesos[i];
+        }
+
+        resto = 11 - (soma % 11);
+        char digito2 = (resto > 9) ? '0' : (char) (resto + '0');
+
+        return CPF.charAt(10) == digito2;
     }
 
     private String buscarIngresso(long cpf) {
