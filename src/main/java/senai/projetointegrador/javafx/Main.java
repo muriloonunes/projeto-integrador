@@ -32,7 +32,7 @@ public class Main extends Application {
         primaryStage.setTitle("Sistema de Venda de Ingressos");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(750, 200);
+        anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 //        anchorPane.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, red 0%, black 100%);");
 
@@ -78,13 +78,13 @@ public class Main extends Application {
         primaryStage.setTitle("Comprar Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(750, 200);
+        anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         Image image = new Image(new FileInputStream("C:\\Users\\Aluno\\Documents\\intellij\\projeto integrador fx\\teatro.jpg"));
         ImageView imgItem = new ImageView(image);
-        imgItem.setFitWidth(600);
-        imgItem.setFitHeight(600);
+        imgItem.setFitWidth(827);
+        imgItem.setFitHeight(632);
         AnchorPane.setTopAnchor(imgItem, 10.0);
         AnchorPane.setRightAnchor(imgItem, 10.0);
 
@@ -237,15 +237,14 @@ public class Main extends Application {
         primaryStage.setTitle("Imprimir Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(450, 400);
+        anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         Label mensagem = new Label();
-        mensagem.setStyle("-fx-text-fill:red");
-        AnchorPane.setTopAnchor(mensagem, 45.0);
+        AnchorPane.setTopAnchor(mensagem, 100.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
 
-        Label cpfLabel = new Label("Digite o seu CPF:");
+        Label cpfLabel = new Label("Digite o seu CPF:");''
         AnchorPane.setTopAnchor(cpfLabel, 3.5);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
@@ -315,7 +314,7 @@ public class Main extends Application {
         primaryStage.setTitle("Estatísticas de Vendas");
 
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(450, 400);
+        anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(15, 15, 15, 15));
 
         int[] vendasPorPeca = new int[3];
