@@ -1,7 +1,5 @@
 package pi.projetointegrador;
 
-package senai.projetointegrador.javafx;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -152,8 +150,8 @@ public class Main extends Application {
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
                     int poltrona = Integer.parseInt(poltronaInput.getText());
 
-                    boolean success = comprarIngresso(cpf, peca, horario, area, poltrona);
-                    if (success) {
+                    int resultadoCompra = comprarIngresso(cpf, peca, horario, area, poltrona);
+                    if (resultadoCompra == 0) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Sucesso!");
                         alert.setHeaderText(null);
@@ -161,8 +159,10 @@ public class Main extends Application {
                         alert.showAndWait();
 
                         start(primaryStage);
-                    } else {
+                    } else if (resultadoCompra == 1) {
                         mensagem.setText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
+                    } else if (resultadoCompra == 2) {
+                        mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
                     }
                 } catch (NumberFormatException ex) {
                     mensagem.setText("Erro: Por favor, insira um CPF válido e um número de poltrona válido.");
@@ -187,34 +187,39 @@ public class Main extends Application {
 
     }
 
-    private boolean comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
+    private int comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
         if (totalVendas >= 255) {
-            return false;
+            return 1;
         }
 
         if (!validarPoltrona(area + 1, poltrona)) {
-            return false;
+            return 1;
         }
 
+        int resultadoVenda;
         if (peca == 0) {
-            if (adicionarVenda(p1, cpf, horario, poltrona)) return false;
+            resultadoVenda = adicionarVenda(p1, cpf, horario, poltrona);
         } else if (peca == 1) {
-            if (adicionarVenda(p2, cpf, horario, poltrona)) return false;
+            resultadoVenda = adicionarVenda(p2, cpf, horario, poltrona);
         } else {
-            if (adicionarVenda(p3, cpf, horario, poltrona)) return false;
+            resultadoVenda = adicionarVenda(p3, cpf, horario, poltrona);
+        }
+
+        if (resultadoVenda == 2) {
+            return 2;
         }
 
         totalVendas++;
-        return true;
+        return 0;
     }
 
-    private boolean adicionarVenda(long[][] peca, long cpf, int horario, int poltrona) {
+    private int adicionarVenda(long[][] peca, long cpf, int horario, int poltrona) {
         int indiceHorario = verificarHorario(horario + 1);
         if (peca[indiceHorario][poltrona - 1] != 0) {
-            return true;
+            return 2;
         }
         peca[indiceHorario][poltrona - 1] = cpf;
-        return false;
+        return 0;
     }
 
     private int verificarHorario(int horario) {
