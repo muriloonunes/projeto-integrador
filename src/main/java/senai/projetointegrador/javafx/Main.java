@@ -1,5 +1,7 @@
 package pi.projetointegrador;
 
+package senai.projetointegrador.javafx;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -140,13 +142,11 @@ public class Main extends Application {
                 mensagem.setText("Por favor, preencha todos os campos.");
             } else {
                 try {
-                    String cpfText = cpfInput.getText();
-                    if (!isCPFValid(cpfText)) {
+                    long cpf = Long.parseLong(cpfInput.getText());
+                    if (!validarCPF(cpf)) {
                         mensagem.setText("CPF inválido. Por favor, insira um CPF válido.");
                         return;
                     }
-
-                    long cpf = Long.parseLong(cpfText);
                     int peca = pecaChoice.getSelectionModel().getSelectedIndex();
                     int horario = horarioChoice.getSelectionModel().getSelectedIndex();
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
@@ -248,6 +248,11 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(mensagem, 100.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
 
+        Label mensagemErro = new Label();
+        mensagemErro.setStyle("-fx-text-fill: red");
+        AnchorPane.setTopAnchor(mensagemErro, 45.0);
+        AnchorPane.setLeftAnchor(mensagemErro, 20.0);
+
         Label cpfLabel = new Label("Digite o seu CPF:");
         AnchorPane.setTopAnchor(cpfLabel, 3.5);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
@@ -259,16 +264,23 @@ public class Main extends Application {
         Button imprimirButton = new Button("Imprimir");
         imprimirButton.setOnAction(e -> {
             String cpfText = cpfInput.getText();
+            mensagemErro.setText("");
+            mensagem.setText("");
+
             if (!cpfText.isEmpty()) {
                 try {
                     long cpf = Long.parseLong(cpfText);
                     String result = buscarIngresso(cpf);
-                    mensagem.setText(result);
+                    if (result.equals("Ingresso não encontrado para o CPF informado.")) {
+                        mensagemErro.setText(result);
+                    } else {
+                        mensagem.setText(result);
+                    }
                 } catch (NumberFormatException ex) {
-                    mensagem.setText("CPF inválido");
+                    mensagemErro.setText("CPF inválido");
                 }
             } else {
-                mensagem.setText("Digite algo válido");
+                mensagemErro.setText("Digite algo válido");
             }
         });
         AnchorPane.setTopAnchor(imprimirButton, 65.0);
@@ -281,43 +293,46 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(voltar, 65.0);
         AnchorPane.setLeftAnchor(voltar, 122.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar, mensagem);
+        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar, mensagem, mensagemErro);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
 
     }
-    public static boolean isCPFValid(String CPF) {
-        CPF = CPF.replaceAll("[^0-9]", ""); // Remove tudo que não for número
-        if (CPF.length() != 11 || CPF.matches("(\\d)\\1{10}")) return false; // Valida tamanho e se todos os dígitos são iguais
+    public static boolean validarCPF(long cpf) {
+        String cpfString = String.format("%011d", cpf);
+        if (cpfString.length() != 11 || cpf == 0) {
+            return false;
+        }
+        int[] cpfArray = new int[11];
+        for (int i = 0; i < 11; i++) {
+            cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
+        }
 
-        int[] pesos = {10, 9, 8, 7, 6, 5, 4, 3, 2};
         int soma = 0;
-
+        int peso = 10;
         for (int i = 0; i < 9; i++) {
-            soma += (CPF.charAt(i) - '0') * pesos[i];
+            soma += cpfArray[i] * peso;
+            peso--;
         }
+        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
 
-        int resto = 11 - (soma % 11);
-        char digito1 = (resto > 9) ? '0' : (char) (resto + '0');
-
-        if (CPF.charAt(9) != digito1) return false;
-
-        pesos = new int[]{11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
         soma = 0;
-
+        peso = 11;
         for (int i = 0; i < 10; i++) {
-            soma += (CPF.charAt(i) - '0') * pesos[i];
+            soma += cpfArray[i] * peso;
+            peso--;
         }
+        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
 
-        resto = 11 - (soma % 11);
-        char digito2 = (resto > 9) ? '0' : (char) (resto + '0');
-
-        return CPF.charAt(10) == digito2;
+        return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
     }
 
     private String buscarIngresso(long cpf) {
+        StringBuilder resultado = new StringBuilder();
+        boolean encontrou = false;
+
         for (int i = 0; i < 3; i++) {
             String nomePeca = pecas[i];
             long[][] peca = switch (i) {
@@ -330,17 +345,25 @@ public class Main extends Application {
             for (int j = 0; j < peca.length; j++) {
                 for (int k = 0; k < peca[j].length; k++) {
                     if (peca[j][k] == cpf) {
+                        if (!encontrou) {
+                            encontrou = true;
+                            resultado.append("Ingressos encontrados para o CPF:\n");
+                        }
                         String cpfFormatado = String.format("%011d", cpf);
-                        return "Ingresso encontrado:\n" +
-                                "CPF: " + cpfFormatado + "\n" +
-                                "Peça: " + nomePeca + "\n" +
-                                "Sessão: " + horarios[j] + "\n" +
-                                "Poltrona: " + (k + 1);
+                        resultado.append("CPF: ").append(cpfFormatado).append("\n")
+                                .append("Peça: ").append(nomePeca).append("\n")
+                                .append("Sessão: ").append(horarios[j]).append("\n")
+                                .append("Poltrona: ").append(k + 1).append("\n\n");
                     }
                 }
             }
         }
-        return "Ingresso não encontrado para o CPF informado.";
+
+        if (!encontrou) {
+            return "Ingresso não encontrado para o CPF informado.";
+        } else {
+            return resultado.toString();
+        }
     }
 
     private void estatisticasVendas(Stage primaryStage) {
