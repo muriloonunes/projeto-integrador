@@ -32,7 +32,6 @@ public class Main extends Application {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
-//        anchorPane.setStyle("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, red 0%, black 100%);");
 
         // Menu principal
         Label label = new Label("Escolha uma opção: ");
@@ -87,7 +86,7 @@ public class Main extends Application {
         AnchorPane.setRightAnchor(imgItem, 10.0);
 
         Label mensagem = new Label();
-        AnchorPane.setTopAnchor(mensagem, 250.0);
+        AnchorPane.setTopAnchor(mensagem, 245.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
         mensagem.setStyle("-fx-text-fill:red");
 
@@ -136,6 +135,7 @@ public class Main extends Application {
 
         Button comprarButton = new Button("Comprar");
         comprarButton.setOnAction(e -> {
+            mensagem.setText("");
             if (cpfInput.getText().isEmpty() || pecaChoice.getSelectionModel().isEmpty() || horarioChoice.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() || poltronaInput.getText().isEmpty()) {
                 mensagem.setText("Por favor, preencha todos os campos.");
             } else {
@@ -160,8 +160,10 @@ public class Main extends Application {
 
                         start(primaryStage);
                     } else if (resultadoCompra == 1) {
-                        mensagem.setText("Erro ao comprar ingresso. Verifique os dados e tente novamente.");
-                    } else if (resultadoCompra == 2) {
+                        mensagem.setText("Não há mais ingressos disponíveis.");
+                    } else if (resultadoCompra == 3) {
+                        mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+                    } else if (resultadoCompra == 4) {
                         mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
                     }
                 } catch (NumberFormatException ex) {
@@ -169,14 +171,14 @@ public class Main extends Application {
                 }
             }
         });
-        AnchorPane.setTopAnchor(comprarButton, 270.0);
+        AnchorPane.setTopAnchor(comprarButton, 285.0);
         AnchorPane.setLeftAnchor(comprarButton, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 270.0);
+        AnchorPane.setTopAnchor(voltar, 285.0);
         AnchorPane.setLeftAnchor(voltar, 120.0);
 
         anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar, mensagem, imgItem);
@@ -189,57 +191,61 @@ public class Main extends Application {
 
     private int comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
         if (totalVendas >= 255) {
-            return 1;
+            return 1; // Todos os ingressos foram vendidos
         }
 
-        if (!validarPoltrona(area + 1, poltrona)) {
-            return 1;
+        int areaMin, areaMax;
+        switch (area + 1) {
+            case 1:
+                areaMin = 1;
+                areaMax = 25;
+                break;
+            case 2:
+                areaMin = 26;
+                areaMax = 125;
+                break;
+            case 3:
+                areaMin = 126;
+                areaMax = 155;
+                break;
+            case 4:
+                areaMin = 156;
+                areaMax = 205;
+                break;
+            case 5:
+                areaMin = 206;
+                areaMax = 255;
+                break;
+            default:
+                return 2; // Área inválida
         }
 
-        int resultadoVenda;
-        if (peca == 0) {
-            resultadoVenda = adicionarVenda(p1, cpf, horario, poltrona);
-        } else if (peca == 1) {
-            resultadoVenda = adicionarVenda(p2, cpf, horario, poltrona);
-        } else {
-            resultadoVenda = adicionarVenda(p3, cpf, horario, poltrona);
+        if (poltrona < areaMin || poltrona > areaMax) {
+            return 3; // Poltrona fora da área selecionada
         }
 
-        if (resultadoVenda == 2) {
-            return 2;
-        }
 
-        totalVendas++;
-        return 0;
-    }
+        long[][] pecaArray = switch (peca) {
+            case 0 -> p1;
+            case 1 -> p2;
+            case 2 -> p3;
+            default -> throw new IllegalArgumentException("Peça inválida");
+        };
 
-    private int adicionarVenda(long[][] peca, long cpf, int horario, int poltrona) {
-        int indiceHorario = verificarHorario(horario + 1);
-        if (peca[indiceHorario][poltrona - 1] != 0) {
-            return 2;
-        }
-        peca[indiceHorario][poltrona - 1] = cpf;
-        return 0;
-    }
-
-    private int verificarHorario(int horario) {
-        return switch (horario) {
+        int indiceHorario = switch (horario + 1) {
             case 1 -> 0;
             case 2 -> 1;
             case 3 -> 2;
             default -> throw new IllegalArgumentException("Horário inválido");
         };
-    }
+        
+        if (pecaArray[indiceHorario][poltrona - 1] != 0) {
+            return 4; // Poltrona ocupada
+        }
+        pecaArray[indiceHorario][poltrona - 1] = cpf;
 
-    private boolean validarPoltrona(int area, int poltrona) {
-        return switch (area) {
-            case 1 -> poltrona >= 1 && poltrona <= 25;
-            case 2 -> poltrona >= 26 && poltrona <= 125;
-            case 3 -> poltrona >= 126 && poltrona <= 155;
-            case 4 -> poltrona >= 156 && poltrona <= 205;
-            case 5 -> poltrona >= 206 && poltrona <= 255;
-            default -> false;
-        };
+        totalVendas++;
+        return 0; // Sucesso
     }
 
     private void imprimirIngresso(Stage primaryStage) {
@@ -355,10 +361,25 @@ public class Main extends Application {
                             resultado.append("Ingressos encontrados para o CPF:\n");
                         }
                         String cpfFormatado = String.format("%011d", cpf);
+                        String area = "";
+                        int poltrona = k + 1;
+
+                        if (poltrona <= 25) {
+                            area = "Plateia A";
+                        } else if (poltrona <= 125) {
+                            area = "Plateia B";
+                        } else if (poltrona <= 155) {
+                            area = "Frisa";
+                        } else if (poltrona <= 205) {
+                            area = "Camarote";
+                        } else if (poltrona <= 255) {
+                            area = "Balcão Nobre";
+                        }
                         resultado.append("CPF: ").append(cpfFormatado).append("\n")
                                 .append("Peça: ").append(nomePeca).append("\n")
                                 .append("Sessão: ").append(horarios[j]).append("\n")
-                                .append("Poltrona: ").append(k + 1).append("\n\n");
+                                .append("Poltrona: ").append(poltrona).append("\n")
+                                .append("Área: ").append(area).append("\n\n");
                     }
                 }
             }
