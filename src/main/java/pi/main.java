@@ -188,7 +188,7 @@ public class Main {
 
     public static boolean verificarCPF(long cpf) {
         String cpfString = String.format("%011d", cpf);
-        if (cpfString.length() != 11 || cpf == 0) {
+        if (cpfString.length() != 11 || cpf == 0 || cpf % 11111111111L == 0) {
             return false;
         }
         int[] cpfArray = new int[11];
