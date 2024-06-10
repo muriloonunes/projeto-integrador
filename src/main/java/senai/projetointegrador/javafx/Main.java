@@ -38,37 +38,45 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(label, 20.0);
         AnchorPane.setLeftAnchor(label, 20.0);
 
-        Button comprarButton = new Button("Comprar Ingresso");
-        comprarButton.setOnAction(e -> {
+        Button comprar = new Button("Comprar Ingresso");
+        comprar.setOnAction(e -> {
             try {
                 comprarIngresso(primaryStage);
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        AnchorPane.setTopAnchor(comprarButton, 50.0);
-        AnchorPane.setLeftAnchor(comprarButton, 20.0);
+        AnchorPane.setTopAnchor(comprar, 50.0);
+        AnchorPane.setLeftAnchor(comprar, 20.0);
 
-        Button imprimirButton = new Button("Imprimir Ingresso");
-        imprimirButton.setOnAction(e -> imprimirIngresso(primaryStage));
-        AnchorPane.setTopAnchor(imprimirButton, 80.0);
-        AnchorPane.setLeftAnchor(imprimirButton, 20.0);
+        Button imprimir = new Button("Imprimir Ingresso");
+        imprimir.setOnAction(e -> imprimirIngresso(primaryStage));
+        AnchorPane.setTopAnchor(imprimir, 80.0);
+        AnchorPane.setLeftAnchor(imprimir, 20.0);
 
-        Button estatisticasButton = new Button("Estatísticas de Vendas");
-        estatisticasButton.setOnAction(e -> estatisticasVendas(primaryStage));
-        AnchorPane.setTopAnchor(estatisticasButton, 110.0);
-        AnchorPane.setLeftAnchor(estatisticasButton, 20.0);
+        Button estatisticas = new Button("Estatísticas de Vendas");
+        estatisticas.setOnAction(e -> estatisticasVendas(primaryStage));
+        AnchorPane.setTopAnchor(estatisticas, 110.0);
+        AnchorPane.setLeftAnchor(estatisticas, 20.0);
 
-        Button sairButton = new Button("Sair");
-        sairButton.setOnAction(e -> System.exit(0));
-        AnchorPane.setTopAnchor(sairButton, 140.0);
-        AnchorPane.setLeftAnchor(sairButton, 20.0);
+        Button sair = new Button("Sair");
+        sair.setOnAction(e -> System.exit(0));
+        AnchorPane.setTopAnchor(sair, 140.0);
+        AnchorPane.setLeftAnchor(sair, 20.0);
 
-        anchorPane.getChildren().addAll(label, comprarButton, imprimirButton, estatisticasButton, sairButton);
+        anchorPane.getChildren().addAll(label, comprar, imprimir, estatisticas, sair);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    sair.fire();
+                    break;
+            }
+        });
     }
 
     private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
@@ -94,27 +102,27 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(cpfLabel, 20.0);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
-        TextField cpfInput = new TextField();
-        AnchorPane.setTopAnchor(cpfInput, 40.0);
-        AnchorPane.setLeftAnchor(cpfInput, 20.0);
+        TextField digitarCPF = new TextField();
+        AnchorPane.setTopAnchor(digitarCPF, 40.0);
+        AnchorPane.setLeftAnchor(digitarCPF, 20.0);
 
         Label pecaLabel = new Label("Escolha a peça:");
         AnchorPane.setTopAnchor(pecaLabel, 70.0);
         AnchorPane.setLeftAnchor(pecaLabel, 20.0);
 
-        ChoiceBox<String> pecaChoice = new ChoiceBox<>();
-        pecaChoice.getItems().addAll(pecas);
-        AnchorPane.setTopAnchor(pecaChoice, 90.0);
-        AnchorPane.setLeftAnchor(pecaChoice, 20.0);
+        ChoiceBox<String> escolherPeca = new ChoiceBox<>();
+        escolherPeca.getItems().addAll(pecas);
+        AnchorPane.setTopAnchor(escolherPeca, 90.0);
+        AnchorPane.setLeftAnchor(escolherPeca, 20.0);
 
         Label horarioLabel = new Label("Escolha o horário:");
         AnchorPane.setTopAnchor(horarioLabel, 115.0);
         AnchorPane.setLeftAnchor(horarioLabel, 20.0);
 
-        ChoiceBox<String> horarioChoice = new ChoiceBox<>();
-        horarioChoice.getItems().addAll(horarios);
-        AnchorPane.setTopAnchor(horarioChoice, 135.0);
-        AnchorPane.setLeftAnchor(horarioChoice, 20.0);
+        ChoiceBox<String> escolherHorario = new ChoiceBox<>();
+        escolherHorario.getItems().addAll(horarios);
+        AnchorPane.setTopAnchor(escolherHorario, 135.0);
+        AnchorPane.setLeftAnchor(escolherHorario, 20.0);
 
         Label areaLabel = new Label("Escolha a área:");
         AnchorPane.setTopAnchor(areaLabel, 160.0);
@@ -129,26 +137,26 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(poltronaLabel, 205.0);
         AnchorPane.setLeftAnchor(poltronaLabel, 20.0);
 
-        TextField poltronaInput = new TextField();
-        AnchorPane.setTopAnchor(poltronaInput, 220.0);
-        AnchorPane.setLeftAnchor(poltronaInput, 20.0);
+        TextField escolherPoltrona = new TextField();
+        AnchorPane.setTopAnchor(escolherPoltrona, 220.0);
+        AnchorPane.setLeftAnchor(escolherPoltrona, 20.0);
 
-        Button comprarButton = new Button("Comprar");
-        comprarButton.setOnAction(e -> {
+        Button comprar = new Button("Comprar");
+        comprar.setOnAction(e -> {
             mensagem.setText("");
-            if (cpfInput.getText().isEmpty() || pecaChoice.getSelectionModel().isEmpty() || horarioChoice.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() || poltronaInput.getText().isEmpty()) {
+            if (digitarCPF.getText().isEmpty() || escolherPeca.getSelectionModel().isEmpty() || escolherHorario.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() || escolherPoltrona.getText().isEmpty()) {
                 mensagem.setText("Por favor, preencha todos os campos.");
             } else {
                 try {
-                    long cpf = Long.parseLong(cpfInput.getText());
+                    long cpf = Long.parseLong(digitarCPF.getText());
                     if (!validarCPF(cpf)) {
                         mensagem.setText("CPF inválido. Por favor, insira um CPF válido.");
                         return;
                     }
-                    int peca = pecaChoice.getSelectionModel().getSelectedIndex();
-                    int horario = horarioChoice.getSelectionModel().getSelectedIndex();
+                    int peca = escolherPeca.getSelectionModel().getSelectedIndex();
+                    int horario = escolherHorario.getSelectionModel().getSelectedIndex();
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
-                    int poltrona = Integer.parseInt(poltronaInput.getText());
+                    int poltrona = Integer.parseInt(escolherPoltrona.getText());
 
                     int resultadoCompra = comprarIngresso(cpf, peca, horario, area, poltrona);
                     if (resultadoCompra == 0) {
@@ -171,8 +179,8 @@ public class Main extends Application {
                 }
             }
         });
-        AnchorPane.setTopAnchor(comprarButton, 285.0);
-        AnchorPane.setLeftAnchor(comprarButton, 20.0);
+        AnchorPane.setTopAnchor(comprar, 285.0);
+        AnchorPane.setLeftAnchor(comprar, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
@@ -181,11 +189,24 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(voltar, 285.0);
         AnchorPane.setLeftAnchor(voltar, 120.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, cpfInput, pecaLabel, pecaChoice, horarioLabel, horarioChoice, areaLabel, areaChoice, poltronaLabel, poltronaInput, comprarButton, voltar, mensagem, imgItem);
+        anchorPane.getChildren().addAll(cpfLabel, digitarCPF, pecaLabel, escolherPeca, horarioLabel, escolherHorario, areaLabel, areaChoice, poltronaLabel, escolherPoltrona, comprar, voltar, mensagem, imgItem);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER:
+                    comprar.fire();
+                    break;
+                case ESCAPE:
+                    voltar.fire();
+                    break;
+                default:
+                    break;
+            }
+        });
 
     }
 
@@ -238,7 +259,7 @@ public class Main extends Application {
             case 3 -> 2;
             default -> throw new IllegalArgumentException("Horário inválido");
         };
-        
+
         if (pecaArray[indiceHorario][poltrona - 1] != 0) {
             return 4; // Poltrona ocupada
         }
@@ -268,13 +289,13 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(cpfLabel, 3.5);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
-        TextField cpfInput = new TextField();
-        AnchorPane.setTopAnchor(cpfInput, 20.0);
-        AnchorPane.setLeftAnchor(cpfInput, 20.0);
+        TextField digitarCPF = new TextField();
+        AnchorPane.setTopAnchor(digitarCPF, 20.0);
+        AnchorPane.setLeftAnchor(digitarCPF, 20.0);
 
-        Button imprimirButton = new Button("Imprimir");
-        imprimirButton.setOnAction(e -> {
-            String cpfText = cpfInput.getText();
+        Button imprimir = new Button("Imprimir");
+        imprimir.setOnAction(e -> {
+            String cpfText = digitarCPF.getText();
             mensagemErro.setText("");
             mensagem.setText("");
 
@@ -294,8 +315,8 @@ public class Main extends Application {
                 mensagemErro.setText("Digite algo válido");
             }
         });
-        AnchorPane.setTopAnchor(imprimirButton, 65.0);
-        AnchorPane.setLeftAnchor(imprimirButton, 20.0);
+        AnchorPane.setTopAnchor(imprimir, 65.0);
+        AnchorPane.setLeftAnchor(imprimir, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
@@ -304,11 +325,24 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(voltar, 65.0);
         AnchorPane.setLeftAnchor(voltar, 122.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, cpfInput, imprimirButton, voltar, mensagem, mensagemErro);
+        anchorPane.getChildren().addAll(cpfLabel, digitarCPF, imprimir, voltar, mensagem, mensagemErro);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER:
+                    imprimir.fire();
+                    break;
+                case ESCAPE:
+                    voltar.fire();
+                    break;
+                default:
+                    break;
+            }
+        });
 
     }
     public static boolean validarCPF(long cpf) {
@@ -501,10 +535,17 @@ public class Main extends Application {
 
         anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
 
-        Scene scene = new
-                Scene(anchorPane);
+        Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    voltar.fire();
+                    break;
+            }
+        });
     }
 
     private double precoPorPoltrona(int poltrona) {
