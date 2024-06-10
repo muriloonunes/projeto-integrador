@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -318,6 +319,7 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(imprimir, 65.0);
         AnchorPane.setLeftAnchor(imprimir, 20.0);
 
+
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
@@ -345,9 +347,10 @@ public class Main extends Application {
         });
 
     }
+
     public static boolean validarCPF(long cpf) {
         String cpfString = String.format("%011d", cpf);
-        if (cpfString.length() != 11 || cpf == 0) {
+        if (cpfString.length() != 11 || cpf == 0 || cpf % 11111111111L == 0) {
             return false;
         }
         int[] cpfArray = new int[11];
