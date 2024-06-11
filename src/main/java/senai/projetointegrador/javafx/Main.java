@@ -195,6 +195,7 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -331,6 +332,7 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -539,6 +541,7 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -587,4 +590,5 @@ public class Main extends Application {
         }
         return index;
     }
+}
 }
