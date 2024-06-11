@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -348,11 +349,13 @@ public class Main extends Application {
         });
 
     }
+
     public static boolean validarCPF(long cpf) {
-        String cpfString = String.format("%011d", cpf);
-        if (cpfString.length() != 11 || cpf == 0  || cpf % 11111111111L == 0) {
+        String cpfString = Long.toString(cpf);
+        if (cpfString.length() !=11 ||cpf == 0 || cpf % 11111111111L == 0) {
             return false;
         }
+
         int[] cpfArray = new int[11];
         for (int i = 0; i < 11; i++) {
             cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
@@ -590,5 +593,4 @@ public class Main extends Application {
         }
         return index;
     }
-}
 }
