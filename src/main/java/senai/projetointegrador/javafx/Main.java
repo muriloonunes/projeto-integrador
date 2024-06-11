@@ -37,7 +37,7 @@ public class Main extends Application {
         // Menu principal
         Label label = new Label("Escolha uma opção: ");
         AnchorPane.setTopAnchor(label, 20.0);
-        AnchorPane.setLeftAnchor(label, 20.0);
+        AnchorPane.setLeftAnchor(label, 680.55);
 
         Button comprar = new Button("Comprar Ingresso");
         comprar.setOnAction(e -> {
@@ -48,27 +48,28 @@ public class Main extends Application {
             }
         });
         AnchorPane.setTopAnchor(comprar, 50.0);
-        AnchorPane.setLeftAnchor(comprar, 20.0);
+        AnchorPane.setLeftAnchor(comprar, 690.0);
 
         Button imprimir = new Button("Imprimir Ingresso");
         imprimir.setOnAction(e -> imprimirIngresso(primaryStage));
         AnchorPane.setTopAnchor(imprimir, 80.0);
-        AnchorPane.setLeftAnchor(imprimir, 20.0);
+        AnchorPane.setLeftAnchor(imprimir, 692.0);
 
         Button estatisticas = new Button("Estatísticas de Vendas");
         estatisticas.setOnAction(e -> estatisticasVendas(primaryStage));
         AnchorPane.setTopAnchor(estatisticas, 110.0);
-        AnchorPane.setLeftAnchor(estatisticas, 20.0);
+        AnchorPane.setLeftAnchor(estatisticas, 679.0);
 
         Button sair = new Button("Sair");
         sair.setOnAction(e -> System.exit(0));
         AnchorPane.setTopAnchor(sair, 140.0);
-        AnchorPane.setLeftAnchor(sair, 20.0);
+        AnchorPane.setLeftAnchor(sair, 731.0);
 
         anchorPane.getChildren().addAll(label, comprar, imprimir, estatisticas, sair);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -81,8 +82,8 @@ public class Main extends Application {
         });
     }
 
+
     private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
-        primaryStage.setTitle("Comprar Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
@@ -195,6 +196,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -211,6 +213,7 @@ public class Main extends Application {
             }
         });
 
+        primaryStage.setTitle("Comprar Ingresso");
     }
 
     private int comprarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
@@ -280,20 +283,20 @@ public class Main extends Application {
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
 
         Label mensagem = new Label();
-        AnchorPane.setTopAnchor(mensagem, 100.0);
+        AnchorPane.setTopAnchor(mensagem, 120.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
 
         Label mensagemErro = new Label();
         mensagemErro.setStyle("-fx-text-fill: red");
-        AnchorPane.setTopAnchor(mensagemErro, 45.0);
+        AnchorPane.setTopAnchor(mensagemErro, 75.0);
         AnchorPane.setLeftAnchor(mensagemErro, 20.0);
 
         Label cpfLabel = new Label("Digite o seu CPF:");
-        AnchorPane.setTopAnchor(cpfLabel, 3.5);
+        AnchorPane.setTopAnchor(cpfLabel, 15.0);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField digitarCPF = new TextField();
-        AnchorPane.setTopAnchor(digitarCPF, 20.0);
+        AnchorPane.setTopAnchor(digitarCPF, 35.0);
         AnchorPane.setLeftAnchor(digitarCPF, 20.0);
 
         Button imprimir = new Button("Imprimir");
@@ -318,20 +321,21 @@ public class Main extends Application {
                 mensagemErro.setText("Digite algo válido");
             }
         });
-        AnchorPane.setTopAnchor(imprimir, 65.0);
+        AnchorPane.setTopAnchor(imprimir, 100.0);
         AnchorPane.setLeftAnchor(imprimir, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 65.0);
+        AnchorPane.setTopAnchor(voltar, 100.0);
         AnchorPane.setLeftAnchor(voltar, 122.0);
 
         anchorPane.getChildren().addAll(cpfLabel, digitarCPF, imprimir, voltar, mensagem, mensagemErro);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -351,8 +355,8 @@ public class Main extends Application {
     }
 
     public static boolean validarCPF(long cpf) {
-        String cpfString = Long.toString(cpf);
-        if (cpfString.length() !=11 ||cpf == 0 || cpf % 11111111111L == 0) {
+        String cpfString = String.format("%011d", cpf);
+        if (cpf == 0  || cpf % 11111111111L == 0) {
             return false;
         }
 
@@ -543,6 +547,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
