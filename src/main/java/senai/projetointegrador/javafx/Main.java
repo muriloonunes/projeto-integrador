@@ -69,7 +69,6 @@ public class Main extends Application {
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -196,7 +195,6 @@ public class Main extends Application {
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -335,7 +333,6 @@ public class Main extends Application {
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -356,7 +353,7 @@ public class Main extends Application {
 
     public static boolean validarCPF(long cpf) {
         String cpfString = String.format("%011d", cpf);
-        if (cpf == 0  || cpf % 11111111111L == 0) {
+        if (cpf == 0 || cpf % 11111111111L == 0) {
             return false;
         }
 
@@ -485,7 +482,9 @@ public class Main extends Application {
         int sessaoMaisOcupada = maisVendido(vendasPorSessao);
         int sessaoMenosOcupada = menosVendido(vendasPorSessao);
 
-        double lucroMedio = (lucroPorPeca[0] + lucroPorPeca[1] + lucroPorPeca[2]) / totalVendas;
+        double lucroMedioPorPeca1 = vendasPorPeca[0] != 0 ? lucroPorPeca[0] / vendasPorPeca[0] : 0;
+        double lucroMedioPorPeca2 = vendasPorPeca[1] != 0 ? lucroPorPeca[1] / vendasPorPeca[1] : 0;
+        double lucroMedioPorPeca3 = vendasPorPeca[2] != 0 ? lucroPorPeca[2] / vendasPorPeca[2] : 0;
 
         Label totalVendasLabel = new Label("Total de vendas: " + totalVendas);
         AnchorPane.setTopAnchor(totalVendasLabel, 20.0);
@@ -507,47 +506,59 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(sessaoMenosOcupadaLabel, 140.0);
         AnchorPane.setLeftAnchor(sessaoMenosOcupadaLabel, 20.0);
 
-        Label lucroMedioLabel = new Label("Lucro médio por peça: R$ " + lucroMedio);
-        AnchorPane.setTopAnchor(lucroMedioLabel, 170.0);
-        AnchorPane.setLeftAnchor(lucroMedioLabel, 20.0);
+        Label lucroMedioLabel1 = new Label("Lucro médio da peça 1: R$ " + String.format("%.2f", lucroMedioPorPeca1));
+        AnchorPane.setTopAnchor(lucroMedioLabel1, 170.0);
+        AnchorPane.setLeftAnchor(lucroMedioLabel1, 20.0);
 
-        Label sessaoMais1 = new Label("Sessão mais lucrativa da peça 1:  " + horarios[sessaoMaisLucrativaPorPeca[0]]);
-        AnchorPane.setTopAnchor(sessaoMais1, 200.0);
+        Label lucroMedioLabel2 = new Label("Lucro médio da peça 2: R$ " + String.format("%.2f", lucroMedioPorPeca2));
+        AnchorPane.setTopAnchor(lucroMedioLabel2, 200.0);
+        AnchorPane.setLeftAnchor(lucroMedioLabel2, 20.0);
+
+        Label lucroMedioLabel3 = new Label("Lucro médio da peça 3: R$ " + String.format("%.2f", lucroMedioPorPeca3));
+        AnchorPane.setTopAnchor(lucroMedioLabel3, 230.0);
+        AnchorPane.setLeftAnchor(lucroMedioLabel3, 20.0);
+
+        Label sessaoMais1 = new Label("Sessão mais lucrativa da peça 1: " + horarios[sessaoMaisLucrativaPorPeca[0]]);
+        AnchorPane.setTopAnchor(sessaoMais1, 260.0);
         AnchorPane.setLeftAnchor(sessaoMais1, 20.0);
 
-        Label sessaoMenos1 = new Label("Sessão menos lucrativa da peça 1:  " + horarios[sessaoMenosLucrativaPorPeca[0]]);
-        AnchorPane.setTopAnchor(sessaoMenos1, 230.0);
+        Label sessaoMenos1 = new Label("Sessão menos lucrativa da peça 1: " + horarios[sessaoMenosLucrativaPorPeca[0]]);
+        AnchorPane.setTopAnchor(sessaoMenos1, 290.0);
         AnchorPane.setLeftAnchor(sessaoMenos1, 20.0);
 
-        Label sessaoMais2 = new Label("Sessão mais lucrativa da peça 2:  " + horarios[sessaoMaisLucrativaPorPeca[1]]);
-        AnchorPane.setTopAnchor(sessaoMais2, 260.0);
+        Label sessaoMais2 = new Label("Sessão mais lucrativa da peça 2: " + horarios[sessaoMaisLucrativaPorPeca[1]]);
+        AnchorPane.setTopAnchor(sessaoMais2, 320.0);
         AnchorPane.setLeftAnchor(sessaoMais2, 20.0);
 
         Label sessaoMenos2 = new Label("Sessão menos lucrativa da peça 2: " + horarios[sessaoMenosLucrativaPorPeca[1]]);
-        AnchorPane.setTopAnchor(sessaoMenos2, 290.0);
+        AnchorPane.setTopAnchor(sessaoMenos2, 350.0);
         AnchorPane.setLeftAnchor(sessaoMenos2, 20.0);
 
         Label sessaoMais3 = new Label("Sessão mais lucrativa da peça 3: " + horarios[sessaoMaisLucrativaPorPeca[2]]);
-        AnchorPane.setTopAnchor(sessaoMais3, 320.0);
+        AnchorPane.setTopAnchor(sessaoMais3, 380.0);
         AnchorPane.setLeftAnchor(sessaoMais3, 20.0);
 
         Label sessaoMenos3 = new Label("Sessão menos lucrativa da peça 3: " + horarios[sessaoMenosLucrativaPorPeca[2]]);
-        AnchorPane.setTopAnchor(sessaoMenos3, 350.0);
+        AnchorPane.setTopAnchor(sessaoMenos3, 410.0);
         AnchorPane.setLeftAnchor(sessaoMenos3, 20.0);
-
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 380.0);
+        AnchorPane.setTopAnchor(voltar, 440.0);
         AnchorPane.setLeftAnchor(voltar, 20.0);
 
-        anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel, voltar, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3);
+        anchorPane.getChildren().addAll(
+                totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel,
+                sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel,
+                lucroMedioLabel1, lucroMedioLabel2, lucroMedioLabel3,
+                sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2,
+                sessaoMais3, sessaoMenos3, voltar
+        );
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
         primaryStage.show();
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -565,37 +576,32 @@ public class Main extends Application {
             return precos[0];
         } else if (poltrona >= 26 && poltrona <= 125) {
             return precos[1];
-        } else if (poltrona >= 126 && poltrona <= 155) {
+        } else if (poltrona >= 126 && poltrona <= 205) {
             return precos[2];
-        } else if (poltrona >= 156 && poltrona <= 205) {
-            return precos[3];
         } else if (poltrona >= 206 && poltrona <= 255) {
-            return precos[4];
+            return precos[3];
+        } else {
+            return 0;
         }
-        return 0;
     }
 
     private int maisVendido(int[] vendas) {
-        int max = vendas[0];
-        int index = 0;
+        int max = 0;
         for (int i = 1; i < vendas.length; i++) {
-            if (vendas[i] > max) {
-                max = vendas[i];
-                index = i;
+            if (vendas[i] > vendas[max]) {
+                max = i;
             }
         }
-        return index;
+        return max;
     }
 
     private int menosVendido(int[] vendas) {
-        int min = vendas[0];
-        int index = 0;
+        int min = 0;
         for (int i = 1; i < vendas.length; i++) {
-            if (vendas[i] < min) {
-                min = vendas[i];
-                index = i;
+            if (vendas[i] < vendas[min]) {
+                min = i;
             }
         }
-        return index;
+        return min;
     }
 }
