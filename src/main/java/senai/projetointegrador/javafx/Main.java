@@ -2,7 +2,6 @@ package pi.projetointegrador;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -44,7 +43,7 @@ public class Main extends Application {
         Button comprar = new Button("Comprar Ingresso");
         comprar.setOnAction(e -> {
             try {
-                adicionarIngresso(primaryStage);
+                comprarIngresso(primaryStage);
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -83,7 +82,7 @@ public class Main extends Application {
     }
 
 
-    private void adicionarIngresso(Stage primaryStage) throws FileNotFoundException {
+    private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
 
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
@@ -405,15 +404,15 @@ public class Main extends Application {
                         String area = "";
                         int poltrona = k + 1;
 
-                        if (poltrona <= 25) {
+                        if (poltrona >= 1 && poltrona <= 25) {
                             area = "Plateia A";
-                        } else if (poltrona <= 125) {
+                        } else if (poltrona >= 26 && poltrona <= 125) {
                             area = "Plateia B";
-                        } else if (poltrona <= 155) {
+                        } else if (poltrona >= 126 && poltrona <= 155) {
                             area = "Frisa";
-                        } else if (poltrona <= 205) {
+                        } else if (poltrona >= 156 && poltrona <= 205) {
                             area = "Camarote";
-                        } else if (poltrona <= 255) {
+                        } else if (poltrona >= 206 && poltrona <= 255) {
                             area = "Balcão Nobre";
                         }
                         resultado.append("CPF: ").append(cpfFormatado).append("\n")
@@ -575,14 +574,17 @@ public class Main extends Application {
             return precos[0];
         } else if (poltrona >= 26 && poltrona <= 125) {
             return precos[1];
-        } else if (poltrona >= 126 && poltrona <= 205) {
+        } else if (poltrona >= 126 && poltrona <= 155) {
             return precos[2];
-        } else if (poltrona >= 206 && poltrona <= 255) {
+        } else if (poltrona >= 156 && poltrona <= 205) {
             return precos[3];
+        } else if (poltrona >= 206 && poltrona <= 255) {
+            return precos[4];
         } else {
             return 0;
         }
     }
+
 
     private int maisVendido(int[] vendas) {
         int max = 0;
