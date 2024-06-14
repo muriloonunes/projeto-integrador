@@ -83,7 +83,6 @@ public class Main extends Application {
 
 
     private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
-
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
@@ -95,103 +94,167 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(imgItem, 10.0);
         AnchorPane.setRightAnchor(imgItem, 10.0);
 
+        RadioButton cpfRadioButton = new RadioButton("CPF");
+        AnchorPane.setTopAnchor(cpfRadioButton, 20.0);
+        AnchorPane.setLeftAnchor(cpfRadioButton, 20.0);
+
+        RadioButton cnpjRadioButton = new RadioButton("CNPJ");
+        AnchorPane.setTopAnchor(cnpjRadioButton, 20.0);
+        AnchorPane.setLeftAnchor(cnpjRadioButton, 80.0);
+
+        ToggleGroup umDeCadaVez = new ToggleGroup();
+        cpfRadioButton.setToggleGroup(umDeCadaVez);
+        cnpjRadioButton.setToggleGroup(umDeCadaVez);
+
         Label mensagem = new Label();
-        AnchorPane.setTopAnchor(mensagem, 245.0);
+        AnchorPane.setTopAnchor(mensagem, 265.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
         mensagem.setStyle("-fx-text-fill:red");
 
-        Label cpfLabel = new Label("Digite o seu CPF:");
-        AnchorPane.setTopAnchor(cpfLabel, 20.0);
+        Label cpfLabel = new Label("Digite o seu CPF ou CNPJ:");
+        AnchorPane.setTopAnchor(cpfLabel, 40.0);
         AnchorPane.setLeftAnchor(cpfLabel, 20.0);
 
         TextField digitarCPF = new TextField();
-        AnchorPane.setTopAnchor(digitarCPF, 40.0);
+        AnchorPane.setTopAnchor(digitarCPF, 60.0);
         AnchorPane.setLeftAnchor(digitarCPF, 20.0);
 
         Label pecaLabel = new Label("Escolha a peça:");
-        AnchorPane.setTopAnchor(pecaLabel, 70.0);
+        AnchorPane.setTopAnchor(pecaLabel, 90.0);
         AnchorPane.setLeftAnchor(pecaLabel, 20.0);
 
         ChoiceBox<String> escolherPeca = new ChoiceBox<>();
         escolherPeca.getItems().addAll(pecas);
-        AnchorPane.setTopAnchor(escolherPeca, 90.0);
+        AnchorPane.setTopAnchor(escolherPeca, 110.0);
         AnchorPane.setLeftAnchor(escolherPeca, 20.0);
 
         Label horarioLabel = new Label("Escolha o horário:");
-        AnchorPane.setTopAnchor(horarioLabel, 115.0);
+        AnchorPane.setTopAnchor(horarioLabel, 135.0);
         AnchorPane.setLeftAnchor(horarioLabel, 20.0);
 
         ChoiceBox<String> escolherHorario = new ChoiceBox<>();
         escolherHorario.getItems().addAll(horarios);
-        AnchorPane.setTopAnchor(escolherHorario, 135.0);
+        AnchorPane.setTopAnchor(escolherHorario, 155.0);
         AnchorPane.setLeftAnchor(escolherHorario, 20.0);
 
         Label areaLabel = new Label("Escolha a área:");
-        AnchorPane.setTopAnchor(areaLabel, 160.0);
+        AnchorPane.setTopAnchor(areaLabel, 180.0);
         AnchorPane.setLeftAnchor(areaLabel, 20.0);
 
         ChoiceBox<String> areaChoice = new ChoiceBox<>();
         areaChoice.getItems().addAll(areas);
-        AnchorPane.setTopAnchor(areaChoice, 175.0);
+        AnchorPane.setTopAnchor(areaChoice, 195.0);
         AnchorPane.setLeftAnchor(areaChoice, 20.0);
 
         Label poltronaLabel = new Label("Escolha a poltrona:");
-        AnchorPane.setTopAnchor(poltronaLabel, 205.0);
+        AnchorPane.setTopAnchor(poltronaLabel, 225.0);
         AnchorPane.setLeftAnchor(poltronaLabel, 20.0);
 
         TextField escolherPoltrona = new TextField();
-        AnchorPane.setTopAnchor(escolherPoltrona, 220.0);
+        AnchorPane.setTopAnchor(escolherPoltrona, 240.0);
         AnchorPane.setLeftAnchor(escolherPoltrona, 20.0);
+
+//        Label preco = new Label("Preço: R$");
+//        AnchorPane.setTopAnchor(preco, 250.0);
+//        AnchorPane.setLeftAnchor(preco, 20.0);
+//
+//        Label valor = new Label();
+//
+//        valor.textProperty().bind(Bindings.createStringBinding(() -> {
+//            int areaSelecionada = areaChoice.getSelectionModel().getSelectedIndex();
+//            return String.format("%.2f", precos[areaSelecionada]);
+//        }, areaChoice.getSelectionModel().selectedIndexProperty()));
+//
+//        AnchorPane.setTopAnchor(valor, 250.0);
+//        AnchorPane.setLeftAnchor(valor, 90.0);
 
         Button comprar = new Button("Comprar");
         comprar.setOnAction(e -> {
             mensagem.setText("");
-            if (digitarCPF.getText().isEmpty() || escolherPeca.getSelectionModel().isEmpty() || escolherHorario.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() || escolherPoltrona.getText().isEmpty()) {
+
+            // Verifica se nenhum RadioButton está selecionado
+            if (!cpfRadioButton.isSelected() && !cnpjRadioButton.isSelected()) {
+                mensagem.setText("Selecione CPF ou CNPJ");
+                return; // Encerra o método, pois um erro foi encontrado
+            }
+
+            if (digitarCPF.getText().isEmpty() || escolherPeca.getSelectionModel().isEmpty() ||
+                    escolherHorario.getSelectionModel().isEmpty() || areaChoice.getSelectionModel().isEmpty() ||
+                    escolherPoltrona.getText().isEmpty()) {
                 mensagem.setText("Por favor, preencha todos os campos.");
             } else {
                 try {
-                    long cpf = Long.parseLong(digitarCPF.getText());
-                    if (!validarCPF(cpf)) {
-                        mensagem.setText("CPF inválido. Por favor, insira um CPF válido.");
-                        return;
-                    }
+                    String digitado = digitarCPF.getText();
+                    boolean isCPF = cpfRadioButton.isSelected();
+
                     int peca = escolherPeca.getSelectionModel().getSelectedIndex();
                     int horario = escolherHorario.getSelectionModel().getSelectedIndex();
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
                     int poltrona = Integer.parseInt(escolherPoltrona.getText());
 
-                    int resultadoCompra = adicionarIngresso(cpf, peca, horario, area, poltrona);
-                    if (resultadoCompra == 0) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Sucesso!");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Ingresso comprado com sucesso!");
-                        alert.showAndWait();
+                    // Validação do CPF ou CNPJ
+                    if (isCPF) {
+                        long cpf = Long.parseLong(digitado);
+                        if (!validarCPF(cpf)) {
+                            mensagem.setText("CPF inválido. Por favor, insira um CPF válido.");
+                            return;
+                        }
+                        int resultadoCompra = adicionarIngresso(cpf, peca, horario, area, poltrona);
+                        if (resultadoCompra == 0) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Sucesso!");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Ingresso comprado com sucesso!");
+                            alert.showAndWait();
 
-                        start(primaryStage);
-                    } else if (resultadoCompra == 1) {
-                        mensagem.setText("Não há mais ingressos disponíveis.");
-                    } else if (resultadoCompra == 3) {
-                        mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
-                    } else if (resultadoCompra == 4) {
-                        mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                            start(primaryStage);
+                        } else if (resultadoCompra == 1) {
+                            mensagem.setText("Não há mais ingressos disponíveis.");
+                        } else if (resultadoCompra == 3) {
+                            mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+                        } else if (resultadoCompra == 4) {
+                            mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                        }
+                    } else {
+                        long cnpj = Long.parseLong(digitado);
+                        if (!validarCNPJ(cnpj)) {
+                            mensagem.setText("CNPJ inválido. Por favor, insira um CNPJ válido.");
+                            return;
+                        }
+                        int resultadoCompra = adicionarIngresso(cnpj, peca, horario, area, poltrona);
+                        if (resultadoCompra == 0) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Sucesso!");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Ingresso comprado com sucesso!");
+                            alert.showAndWait();
+
+                            start(primaryStage);
+                        } else if (resultadoCompra == 1) {
+                            mensagem.setText("Não há mais ingressos disponíveis.");
+                        } else if (resultadoCompra == 3) {
+                            mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+                        } else if (resultadoCompra == 4) {
+                            mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                        }
                     }
                 } catch (NumberFormatException ex) {
-                    mensagem.setText("Erro: Por favor, insira um CPF válido e um número de poltrona válido.");
+                    mensagem.setText("Erro: Por favor, insira um CPF ou CNPJ válido e um número de poltrona válido.");
                 }
             }
         });
-        AnchorPane.setTopAnchor(comprar, 285.0);
+
+        AnchorPane.setTopAnchor(comprar, 305.0);
         AnchorPane.setLeftAnchor(comprar, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 285.0);
+        AnchorPane.setTopAnchor(voltar, 305.0);
         AnchorPane.setLeftAnchor(voltar, 120.0);
 
-        anchorPane.getChildren().addAll(cpfLabel, digitarCPF, pecaLabel, escolherPeca, horarioLabel, escolherHorario, areaLabel, areaChoice, poltronaLabel, escolherPoltrona, comprar, voltar, mensagem, imgItem);
+        anchorPane.getChildren().addAll(cpfLabel, digitarCPF, pecaLabel, escolherPeca, horarioLabel, escolherHorario, areaLabel, areaChoice, poltronaLabel, escolherPoltrona, comprar, voltar, mensagem, imgItem, cnpjRadioButton, cpfRadioButton);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
@@ -289,7 +352,7 @@ public class Main extends Application {
         mensagemErro.setLayoutX(575.0);
         mensagemErro.setLayoutY(65.0);
 
-        Label cpfLabel = new Label("Digite o seu CPF:");
+        Label cpfLabel = new Label("Digite o seu CPF ou CNPJ:");
         cpfLabel.setLayoutX(605.0);
         cpfLabel.setLayoutY(17.0);
 
@@ -306,8 +369,12 @@ public class Main extends Application {
             if (!cpfText.isEmpty()) {
                 try {
                     long cpf = Long.parseLong(cpfText);
+                    if (cpf == 0) {
+                        mensagemErro.setText("CPF ou CNPJ inválido");
+                        return;
+                    }
                     String result = buscarIngresso(cpf);
-                    if (result.equals("Ingresso não encontrado para o CPF informado.")) {
+                    if (result.equals("Ingresso não encontrado para o CPF ou CNPK+J informado.")) {
                         mensagemErro.setText(result);
                     } else {
                         mensagem.setText(result);
@@ -378,6 +445,41 @@ public class Main extends Application {
         int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
 
         return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
+    }
+
+    public static boolean validarCNPJ(long cnpj) {
+        String cnpjString = String.format("%014d", cnpj);
+        if (cnpj == 0 || cnpj % 11111111111111L == 0) {
+            return false;
+        }
+
+        int[] cnpjArray = new int[14];
+        for (int i = 0; i < 14; i++) {
+            cnpjArray[i] = Character.getNumericValue(cnpjString.charAt(i));
+        }
+        int soma = 0;
+        int peso = 2;
+        for (int i = 11; i >= 0; i--) {
+            soma += cnpjArray[i] * peso;
+            peso++;
+            if (peso == 10) {
+                peso = 2;
+            }
+        }
+        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+        soma = 0;
+        peso = 2;
+        for (int i = 12; i >= 0; i--) {
+            soma += cnpjArray[i] * peso;
+            peso++;
+            if (peso == 10) {
+                peso = 2;
+            }
+        }
+        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+        return cnpjArray[12] == primeiroDigito && cnpjArray[13] == segundoDigito;
     }
 
     private String buscarIngresso(long cpf) {
