@@ -1,6 +1,5 @@
 package pi.projetointegrador;
 
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -9,12 +8,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 
 public class Main extends Application {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
@@ -25,12 +23,12 @@ public class Main extends Application {
     static long[][] p2 = new long[3][255];
     static long[][] p3 = new long[3][255];
     static int totalVendas = 0;
-
+    private int quantidadeIngressos = 0;
+    private Stage comprarIngressoStage;
 
     public static void main(String[] args) {
         launch(args);
     }
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,14 +43,79 @@ public class Main extends Application {
         label.setLayoutX(591.0);
         label.setLayoutY(17.0);
 
-
         Button comprar = new Button("Comprar Ingresso");
         comprar.setOnAction(e -> {
-            try {
-                comprarIngresso(primaryStage);
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
+            // janela para definir a quantidade de ingressos
+            Stage quantidadeStage = new Stage();
+            quantidadeStage.setTitle("Quantidade de Ingressos");
+            quantidadeStage.initModality(Modality.WINDOW_MODAL);
+            quantidadeStage.initOwner(primaryStage);
+
+            AnchorPane quantidadePane = new AnchorPane();
+            quantidadePane.setPrefSize(300, 150);
+            quantidadePane.setPadding(new Insets(20));
+
+            Label quantidadeLabel = new Label("Quantidade de ingressos:");
+            quantidadeLabel.setLayoutX(35.0);
+            quantidadeLabel.setLayoutY(10.0);
+
+            TextField quantidadeIngressosField = new TextField();
+            quantidadeIngressosField.setLayoutX(35.0);
+            quantidadeIngressosField.setLayoutY(30.0);
+
+            Label mensagem = new Label();
+            mensagem.setStyle("-fx-text-fill:red");
+            mensagem.setLayoutX(35.0);
+            mensagem.setLayoutY(55.0);
+
+            Button okButton = new Button("OK");
+            okButton.setLayoutX(35.0);
+            okButton.setLayoutY(75.0);
+
+            Button voltarButton = new Button("Voltar");
+            voltarButton.setLayoutX(75.0);
+            voltarButton.setLayoutY(75.0);
+
+            okButton.setOnAction(event -> {
+                mensagem.setText("");
+                try {
+                    quantidadeIngressos = Integer.parseInt(quantidadeIngressosField.getText());
+                    if (quantidadeIngressos <= 0) {
+                        mensagem.setText("Quantidade inválida. Por favor, insira um número positivo.");
+                    } else {
+                        // fecha a tela e chama o método de comprarIngresso
+                        quantidadeStage.close();
+                        comprarIngresso(primaryStage);
+                    }
+                } catch (NumberFormatException ex) {
+                    mensagem.setText("Por favor, insira um número válido.");
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+            voltarButton.setOnAction(event -> {
+                quantidadeStage.close();
+            });
+
+            quantidadePane.getChildren().addAll(quantidadeLabel, quantidadeIngressosField, okButton, voltarButton, mensagem);
+
+            Scene scene = new Scene(quantidadePane);
+
+            scene.setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case ESCAPE:
+                        voltarButton.fire();
+                        break;
+                    case ENTER:
+                        okButton.fire();
+                        break;
+                }
+            });
+
+            quantidadeStage.setScene(scene);
+            quantidadeStage.showAndWait();
+
         });
         comprar.setLayoutX(590.0);
         comprar.setLayoutY(46.0);
@@ -77,7 +140,6 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -89,6 +151,9 @@ public class Main extends Application {
     }
 
     private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
+        comprarIngressoStage = new Stage();
+        comprarIngressoStage.setTitle("Comprar Ingresso");
+
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
@@ -113,17 +178,17 @@ public class Main extends Application {
         cnpjRadioButton.setToggleGroup(umDeCadaVez);
 
         Label mensagem = new Label();
-        AnchorPane.setTopAnchor(mensagem, 350.0);
+        AnchorPane.setTopAnchor(mensagem, 360.0);
         AnchorPane.setLeftAnchor(mensagem, 20.0);
         mensagem.setStyle("-fx-text-fill:red");
 
         Label precosLabel = new Label();
-        precosLabel.setText(String.format("Plateia A: %.2f\n", 40.00) +
-                String.format("Plateia B: %.2f\n", 60.00) +
-                String.format("Frisa: %.2f\n", 120.00) +
-                String.format("Camarotes: %.2f\n", 80.00) +
-                String.format("Balcão Nobre: %.2f\n", 250.00));
-        AnchorPane.setTopAnchor(precosLabel, 265.0);
+        precosLabel.setText(String.format("Plateia A: R$%.2f\n", 40.00) +
+                String.format("Plateia B: R$%.2f\n", 60.00) +
+                String.format("Frisa: R$%.2f\n", 120.00) +
+                String.format("Camarotes: R$%.2f\n", 80.00) +
+                String.format("Balcão Nobre: R$%.2f\n", 250.00));
+        AnchorPane.setTopAnchor(precosLabel, 270.0);
         AnchorPane.setLeftAnchor(precosLabel, 20.0);
 
         Label cpfLabel = new Label("Digite o seu CPF ou CNPJ:");
@@ -176,7 +241,7 @@ public class Main extends Application {
             // Verifica se nenhum RadioButton está selecionado
             if (!cpfRadioButton.isSelected() && !cnpjRadioButton.isSelected()) {
                 mensagem.setText("Selecione CPF ou CNPJ");
-                return; // Encerra o método, pois um erro foi encontrado
+                return;
             }
 
             if (digitarCPF.getText().isEmpty() || escolherPeca.getSelectionModel().isEmpty() ||
@@ -188,14 +253,11 @@ public class Main extends Application {
                     String digitado = digitarCPF.getText();
                     boolean isCPF = cpfRadioButton.isSelected();
 
-
                     int peca = escolherPeca.getSelectionModel().getSelectedIndex();
                     int horario = escolherHorario.getSelectionModel().getSelectedIndex();
                     int area = areaChoice.getSelectionModel().getSelectedIndex();
                     int poltrona = Integer.parseInt(escolherPoltrona.getText());
 
-
-                    // Validação do CPF ou CNPJ
                     if (isCPF) {
                         long cpf = Long.parseLong(digitado);
                         if (!validarCPF(cpf)) {
@@ -210,8 +272,19 @@ public class Main extends Application {
                             alert.setContentText("Ingresso comprado com sucesso!");
                             alert.showAndWait();
 
+                            // Limpa os campos
+                            digitarCPF.setText("");
+                            escolherPeca.getSelectionModel().clearSelection();
+                            escolherHorario.getSelectionModel().clearSelection();
+                            areaChoice.getSelectionModel().clearSelection();
+                            escolherPoltrona.setText("");
 
-                            start(primaryStage);
+                            quantidadeIngressos--; // Decrementa a quantidade de ingressos a serem comprados
+
+                            if (quantidadeIngressos <= 0) {
+                                comprarIngressoStage.close();
+                                start(primaryStage); // Re-abre o menu principal
+                            }
                         } else if (resultadoCompra == 1) {
                             mensagem.setText("Não há mais ingressos disponíveis.");
                         } else if (resultadoCompra == 3) {
@@ -233,14 +306,27 @@ public class Main extends Application {
                             alert.setContentText("Ingresso comprado com sucesso!");
                             alert.showAndWait();
 
+                            // Limpa os campos
+                            digitarCPF.setText("");
+                            escolherPeca.getSelectionModel().clearSelection();
+                            escolherHorario.getSelectionModel().clearSelection();
+                            areaChoice.getSelectionModel().clearSelection();
+                            escolherPoltrona.setText("");
 
-                            start(primaryStage);
+                            quantidadeIngressos--; // Decrementa a quantidade de ingressos a serem comprados
+
+                            if (quantidadeIngressos <= 0) {
+                                comprarIngressoStage.close();
+                                start(primaryStage); // Re-abre o menu principal
+                            }
                         } else if (resultadoCompra == 1) {
                             mensagem.setText("Não há mais ingressos disponíveis.");
                         } else if (resultadoCompra == 3) {
                             mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+
                         } else if (resultadoCompra == 4) {
                             mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+
                         }
                     }
                 } catch (NumberFormatException ex) {
@@ -249,14 +335,14 @@ public class Main extends Application {
             }
         });
 
-        AnchorPane.setTopAnchor(comprar, 370.0);
+        AnchorPane.setTopAnchor(comprar, 380.0);
         AnchorPane.setLeftAnchor(comprar, 20.0);
 
         Button voltar = new Button("Voltar");
         voltar.setOnAction(e -> {
             start(primaryStage);
         });
-        AnchorPane.setTopAnchor(voltar, 370.0);
+        AnchorPane.setTopAnchor(voltar, 380.0);
         AnchorPane.setLeftAnchor(voltar, 120.0);
 
         anchorPane.getChildren().addAll(cpfLabel, digitarCPF, pecaLabel, escolherPeca, horarioLabel, escolherHorario, areaLabel, areaChoice, poltronaLabel, escolherPoltrona, comprar, voltar, mensagem, imgItem, cnpjRadioButton, cpfRadioButton, precosLabel);
@@ -264,7 +350,6 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -281,6 +366,71 @@ public class Main extends Application {
         primaryStage.setTitle("Comprar Ingresso");
     }
 
+    public static boolean validarCPF(long cpf) {
+        String cpfString = String.format("%011d", cpf);
+        if (cpf == 0 || cpf % 11111111111L == 0) {
+            return false;
+        }
+
+        int[] cpfArray = new int[11];
+        for (int i = 0; i < 11; i++) {
+            cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
+        }
+
+        int soma = 0;
+        int peso = 10;
+        for (int i = 0; i < 9; i++) {
+            soma += cpfArray[i] * peso;
+            peso--;
+        }
+        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+        soma = 0;
+        peso = 11;
+        for (int i = 0; i < 10; i++) {
+            soma += cpfArray[i] * peso;
+            peso--;
+        }
+        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+        return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
+    }
+
+    public static boolean validarCNPJ(long cnpj) {
+        String cnpjString = String.format("%014d", cnpj);
+        if (cnpj == 0 || cnpj % 11111111111111L == 0) {
+            return false;
+        }
+
+        int[] cnpjArray = new int[14];
+        for (int i = 0; i < 14; i++) {
+            cnpjArray[i] = Character.getNumericValue(cnpjString.charAt(i));
+        }
+        int soma = 0;
+        int peso = 2;
+        for (int i = 11; i >= 0; i--) {
+            soma += cnpjArray[i] * peso;
+            peso++;
+            if (peso == 10) {
+                peso = 2;
+            }
+        }
+        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+
+        soma = 0;
+        peso = 2;
+        for (int i = 12; i >= 0; i--) {
+            soma += cnpjArray[i] * peso;
+            peso++;
+            if (peso == 10) {
+                peso = 2;
+            }
+        }
+        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+
+        return cnpjArray[12] == primeiroDigito && cnpjArray[13] == segundoDigito;
+    }
 
     private int adicionarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
         if (totalVendas >= 255) {
@@ -340,7 +490,6 @@ public class Main extends Application {
         return 0; // Sucesso
     }
 
-
     private void imprimirIngresso(Stage primaryStage) {
         primaryStage.setTitle("Imprimir Ingresso");
 
@@ -359,7 +508,7 @@ public class Main extends Application {
         mensagemErro.setLayoutY(65.0);
 
         Label cpfLabel = new Label("Digite o seu CPF ou CNPJ:");
-        cpfLabel.setLayoutX(605.0);
+        cpfLabel.setLayoutX(575.0);
         cpfLabel.setLayoutY(17.0);
 
         TextField digitarCPF = new TextField();
@@ -374,19 +523,21 @@ public class Main extends Application {
 
             if (!cpfText.isEmpty()) {
                 try {
-                    long cpf = Long.parseLong(cpfText);
-                    if (cpf == 0) {
-                        mensagemErro.setText("CPF ou CNPJ inválido");
+                    long numero = Long.parseLong(cpfText);
+                    String tipoDoc = validarCPF(numero) ? "CPF" : (validarCNPJ(numero) ? "CNPJ" : "CPF ou CNPJ inválido");
+                    // se validarCPF retornar true, tipoDoc recebe "CPF", se validarCNPJ retornar true, tipoDoc recebe "CNPJ", caso contrário, tipoDoc recebe "CPF ou CNPJ inválido"
+                    if (tipoDoc.equals("CPF ou CNPJ inválido")) {
+                        mensagemErro.setText(tipoDoc);
                         return;
                     }
-                    String result = buscarIngresso(cpf);
-                    if (result.equals("Ingresso não encontrado para o CPF ou CNPK+J informado.")) {
+                    String result = buscarIngresso(numero, tipoDoc);
+                    if (result.equals("Ingresso não encontrado para o CPF ou CNPJ informado.")) {
                         mensagemErro.setText(result);
                     } else {
                         mensagem.setText(result);
                     }
                 } catch (NumberFormatException ex) {
-                    mensagemErro.setText("CPF inválido");
+                    mensagemErro.setText("CPF ou CNPJ inválido");
                 }
             } else {
                 mensagemErro.setText("Digite algo válido");
@@ -407,7 +558,6 @@ public class Main extends Application {
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -423,76 +573,7 @@ public class Main extends Application {
         });
     }
 
-    public static boolean validarCPF(long cpf) {
-        String cpfString = String.format("%011d", cpf);
-        if (cpf == 0 || cpf % 11111111111L == 0) {
-            return false;
-        }
-
-        int[] cpfArray = new int[11];
-        for (int i = 0; i < 11; i++) {
-            cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
-        }
-
-        int soma = 0;
-        int peso = 10;
-        for (int i = 0; i < 9; i++) {
-            soma += cpfArray[i] * peso;
-            peso--;
-        }
-        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-        soma = 0;
-        peso = 11;
-        for (int i = 0; i < 10; i++) {
-            soma += cpfArray[i] * peso;
-            peso--;
-        }
-        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-        return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
-    }
-
-
-    public static boolean validarCNPJ(long cnpj) {
-        String cnpjString = String.format("%014d", cnpj);
-        if (cnpj == 0 || cnpj % 11111111111111L == 0) {
-            return false;
-        }
-
-        int[] cnpjArray = new int[14];
-        for (int i = 0; i < 14; i++) {
-            cnpjArray[i] = Character.getNumericValue(cnpjString.charAt(i));
-        }
-        int soma = 0;
-        int peso = 2;
-        for (int i = 11; i >= 0; i--) {
-            soma += cnpjArray[i] * peso;
-            peso++;
-            if (peso == 10) {
-                peso = 2;
-            }
-        }
-        int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-
-        soma = 0;
-        peso = 2;
-        for (int i = 12; i >= 0; i--) {
-            soma += cnpjArray[i] * peso;
-            peso++;
-            if (peso == 10) {
-                peso = 2;
-            }
-        }
-        int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
-
-        return cnpjArray[12] == primeiroDigito && cnpjArray[13] == segundoDigito;
-    }
-
-
-    private String buscarIngresso(long cpf) {
+    private String buscarIngresso(long cpf, String tipoDoc) {
         StringBuilder resultado = new StringBuilder();
         boolean encontrou = false;
 
@@ -510,7 +591,7 @@ public class Main extends Application {
                     if (peca[j][k] == cpf) {
                         if (!encontrou) {
                             encontrou = true;
-                            resultado.append("Ingressos encontrados para o CPF:\n");
+                            resultado.append("Ingressos encontrados para o ").append(tipoDoc).append(":\n");
                         }
                         String cpfFormatado = String.format("%011d", cpf);
                         String area = "";
@@ -537,7 +618,7 @@ public class Main extends Application {
                             case "Balcão Nobre" -> 4;
                             default -> -1;
                         };
-                        resultado.append("CPF: ").append(cpfFormatado).append("\n")
+                        resultado.append(tipoDoc).append(": ").append(cpfFormatado).append("\n")
                                 .append("Peça: ").append(nomePeca).append("\n")
                                 .append("Sessão: ").append(horarios[j]).append("\n")
                                 .append("Poltrona: ").append(poltrona).append("\n")
@@ -550,12 +631,11 @@ public class Main extends Application {
         }
 
         if (!encontrou) {
-            return "Ingresso não encontrado para o CPF informado.";
+            return "Ingresso não encontrado para o CPF ou CNPJ informado.";
         } else {
             return resultado.toString();
         }
     }
-
 
     private void estatisticasVendas(Stage primaryStage) {
         primaryStage.setTitle("Estatísticas de Vendas");
@@ -600,7 +680,6 @@ public class Main extends Application {
                 }
             }
         }
-
 
         int pecaMaisVendida = maisVendido(vendasPorPeca);
         int pecaMenosVendida = menosVendido(vendasPorPeca);
@@ -674,19 +753,11 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(voltar, 440.0);
         AnchorPane.setLeftAnchor(voltar, 20.0);
 
-        anchorPane.getChildren().addAll(
-                totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel,
-                sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel,
-                lucroMedioLabel1, lucroMedioLabel2, lucroMedioLabel3,
-                sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2,
-                sessaoMais3, sessaoMenos3, voltar
-        );
-
+        anchorPane.getChildren().addAll(totalVendasLabel, pecaMaisVendidaLabel, pecaMenosVendidaLabel, sessaoMaisOcupadaLabel, sessaoMenosOcupadaLabel, lucroMedioLabel1, lucroMedioLabel2, lucroMedioLabel3, sessaoMenos1, sessaoMais1, sessaoMais2, sessaoMenos2, sessaoMais3, sessaoMenos3, voltar);
 
         Scene scene = new Scene(anchorPane);
         primaryStage.setScene(scene);
         primaryStage.show();
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -696,7 +767,6 @@ public class Main extends Application {
             }
         });
     }
-
 
     private double precoPorPoltrona(int poltrona) {
         if (poltrona >= 1 && poltrona <= 25) {
@@ -714,9 +784,6 @@ public class Main extends Application {
         }
     }
 
-
-
-
     private int maisVendido(int[] vendas) {
         int max = 0;
         for (int i = 1; i < vendas.length; i++) {
@@ -726,7 +793,6 @@ public class Main extends Application {
         }
         return max;
     }
-
 
     private int menosVendido(int[] vendas) {
         int min = 0;
