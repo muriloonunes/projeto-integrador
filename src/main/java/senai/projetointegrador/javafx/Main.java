@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class Main extends Application {
     static String[] pecas = {"Peça 1", "Peça 2", "Peça 3"};
@@ -24,7 +26,6 @@ public class Main extends Application {
     static long[][] p3 = new long[3][255];
     static int totalVendas = 0;
     private int quantidadeIngressos = 0;
-    private Stage comprarIngressoStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,7 +49,7 @@ public class Main extends Application {
             // janela para definir a quantidade de ingressos
             Stage quantidadeStage = new Stage();
             quantidadeStage.setTitle("Quantidade de Ingressos");
-            quantidadeStage.initModality(Modality.WINDOW_MODAL);
+            quantidadeStage.initModality(Modality.WINDOW_MODAL);    // bloqueia a janela do menu inicial até que essa seja fechada
             quantidadeStage.initOwner(primaryStage);
 
             AnchorPane quantidadePane = new AnchorPane();
@@ -83,8 +84,7 @@ public class Main extends Application {
                     if (quantidadeIngressos <= 0) {
                         mensagem.setText("Quantidade inválida. Por favor, insira um número positivo.");
                     } else {
-                        // fecha a tela e chama o método de comprarIngresso
-                        quantidadeStage.close();
+                        quantidadeStage.close();    // fecha a tela e chama o método de comprarIngresso
                         comprarIngresso(primaryStage);
                     }
                 } catch (NumberFormatException ex) {
@@ -151,7 +151,7 @@ public class Main extends Application {
     }
 
     private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
-        comprarIngressoStage = new Stage();
+        Stage comprarIngressoStage = new Stage();
         comprarIngressoStage.setTitle("Comprar Ingresso");
 
         AnchorPane anchorPane = new AnchorPane();
@@ -173,6 +173,7 @@ public class Main extends Application {
         AnchorPane.setTopAnchor(cnpjRadioButton, 20.0);
         AnchorPane.setLeftAnchor(cnpjRadioButton, 80.0);
 
+        // permite que apenas um dos RadioButtons seja selecionado de cada vez
         ToggleGroup umDeCadaVez = new ToggleGroup();
         cpfRadioButton.setToggleGroup(umDeCadaVez);
         cnpjRadioButton.setToggleGroup(umDeCadaVez);
@@ -183,11 +184,11 @@ public class Main extends Application {
         mensagem.setStyle("-fx-text-fill:red");
 
         Label precosLabel = new Label();
-        precosLabel.setText(String.format("Plateia A: R$%.2f\n", 40.00) +
-                String.format("Plateia B: R$%.2f\n", 60.00) +
-                String.format("Frisa: R$%.2f\n", 120.00) +
-                String.format("Camarotes: R$%.2f\n", 80.00) +
-                String.format("Balcão Nobre: R$%.2f\n", 250.00));
+        precosLabel.setText("Plateia A: R$40,00\n" +
+                "Plateia B: R$60,00\n" +
+                "Frisa: R$120,00\n" +
+                "Camarotes: R$80,00\n" +
+                "Balcão Nobre: R$250,00\n");
         AnchorPane.setTopAnchor(precosLabel, 270.0);
         AnchorPane.setLeftAnchor(precosLabel, 20.0);
 
@@ -238,10 +239,10 @@ public class Main extends Application {
         comprar.setOnAction(e -> {
             mensagem.setText("");
 
-            // Verifica se nenhum RadioButton está selecionado
+            // verifica se nenhum RadioButton foi selecionado
             if (!cpfRadioButton.isSelected() && !cnpjRadioButton.isSelected()) {
                 mensagem.setText("Selecione CPF ou CNPJ");
-                return;
+                return; // retorna, pois caso contrário ele ainda exibiria as outras mensagens de erro
             }
 
             if (digitarCPF.getText().isEmpty() || escolherPeca.getSelectionModel().isEmpty() ||
@@ -272,18 +273,18 @@ public class Main extends Application {
                             alert.setContentText("Ingresso comprado com sucesso!");
                             alert.showAndWait();
 
-                            // Limpa os campos
+                            // Limpa os campos para o proóximo ingresso ser comprado
                             digitarCPF.setText("");
                             escolherPeca.getSelectionModel().clearSelection();
                             escolherHorario.getSelectionModel().clearSelection();
                             areaChoice.getSelectionModel().clearSelection();
                             escolherPoltrona.setText("");
 
-                            quantidadeIngressos--; // Decrementa a quantidade de ingressos a serem comprados
+                            quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
 
                             if (quantidadeIngressos <= 0) {
                                 comprarIngressoStage.close();
-                                start(primaryStage); // Re-abre o menu principal
+                                start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
                             }
                         } else if (resultadoCompra == 1) {
                             mensagem.setText("Não há mais ingressos disponíveis.");
@@ -306,18 +307,18 @@ public class Main extends Application {
                             alert.setContentText("Ingresso comprado com sucesso!");
                             alert.showAndWait();
 
-                            // Limpa os campos
+                            // Limpa os campos para o proóximo ingresso ser comprado
                             digitarCPF.setText("");
                             escolherPeca.getSelectionModel().clearSelection();
                             escolherHorario.getSelectionModel().clearSelection();
                             areaChoice.getSelectionModel().clearSelection();
                             escolherPoltrona.setText("");
 
-                            quantidadeIngressos--; // Decrementa a quantidade de ingressos a serem comprados
+                            quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
 
                             if (quantidadeIngressos <= 0) {
                                 comprarIngressoStage.close();
-                                start(primaryStage); // Re-abre o menu principal
+                                start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
                             }
                         } else if (resultadoCompra == 1) {
                             mensagem.setText("Não há mais ingressos disponíveis.");
@@ -370,11 +371,13 @@ public class Main extends Application {
         String cpfString = String.format("%011d", cpf);
         if (cpf == 0 || cpf % 11111111111L == 0) {
             return false;
+            // retorna false se o cpf digitado foi 000 ou se todos seus dígitos forem iguais (22222222222, etc)
         }
 
         int[] cpfArray = new int[11];
         for (int i = 0; i < 11; i++) {
             cpfArray[i] = Integer.parseInt(String.valueOf(cpfString.charAt(i)));
+            // passa os dígitos da string cpf para cada posiçao do array
         }
 
         int soma = 0;
@@ -384,6 +387,7 @@ public class Main extends Application {
             peso--;
         }
         int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+        // se o resto da divisão de soma por 11 for menor que 2, primeiroDigito recebe 0. caso contrario, primeiroDigito recebe 11 - soma % 11
 
         soma = 0;
         peso = 11;
@@ -392,19 +396,23 @@ public class Main extends Application {
             peso--;
         }
         int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+        // se o resto da divisão de soma por 11 for menor que 2, segundoDigito recebe 0. caso contrario, segundoDigito recebe 11 - soma % 11
 
         return cpfArray[9] == primeiroDigito && cpfArray[10] == segundoDigito;
+        // verifica se as variaveis primeiroDigito e segundoDigito sao iguais aos digitos verificadores do CPF, que estao na posicao 9 e 10 do array
     }
 
     public static boolean validarCNPJ(long cnpj) {
         String cnpjString = String.format("%014d", cnpj);
         if (cnpj == 0 || cnpj % 11111111111111L == 0) {
             return false;
+            // retorna false se o cnpj digitado foi 000 ou se todos seus dígitos forem iguais (22222222222222, etc)
         }
 
         int[] cnpjArray = new int[14];
         for (int i = 0; i < 14; i++) {
             cnpjArray[i] = Character.getNumericValue(cnpjString.charAt(i));
+            // passa os dígitos da string cpf para cada posiçao do array
         }
         int soma = 0;
         int peso = 2;
@@ -416,7 +424,7 @@ public class Main extends Application {
             }
         }
         int primeiroDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
-
+        // se o resto da divisão de soma por 11 for menor que 2, primeiroDigito recebe 0. caso contrario, primeiroDigito recebe 11 - soma % 11
 
         soma = 0;
         peso = 2;
@@ -428,8 +436,10 @@ public class Main extends Application {
             }
         }
         int segundoDigito = (soma % 11 < 2) ? 0 : 11 - (soma % 11);
+        // se o resto da divisão de soma por 11 for menor que 2, segundoDigito recebe 0. caso contrario, segundoDigito recebe 11 - soma % 11
 
         return cnpjArray[12] == primeiroDigito && cnpjArray[13] == segundoDigito;
+        // verifica se as variaveis primeiroDigito e segundoDigito sao iguais aos digitos verificadores do CPF, que estao na posicao 9 e 10 do array
     }
 
     private int adicionarIngresso(long cpf, int peca, int horario, int area, int poltrona) {
@@ -437,6 +447,7 @@ public class Main extends Application {
             return 1; // Todos os ingressos foram vendidos
         }
 
+        // serve apenas para definir se a poltrona que o usuário digitou está dentro da área selecionada por ele:
         int areaMin, areaMax;
         switch (area + 1) {
             case 1:
@@ -460,13 +471,14 @@ public class Main extends Application {
                 areaMax = 255;
                 break;
             default:
-                return 2; // Área inválida
+                return 2;
         }
 
         if (poltrona < areaMin || poltrona > areaMax) {
             return 3; // Poltrona fora da área selecionada
         }
 
+        // define em qual das matrizes (p1, p2 ou p3) os dados serão adicionados
         long[][] pecaArray = switch (peca) {
             case 0 -> p1;
             case 1 -> p2;
@@ -474,6 +486,7 @@ public class Main extends Application {
             default -> throw new IllegalArgumentException("Peça inválida");
         };
 
+        // define em qual das linhas da matriz selecionada os dados serão adicionados
         int indiceHorario = switch (horario + 1) {
             case 1 -> 0;
             case 2 -> 1;
@@ -597,7 +610,6 @@ public class Main extends Application {
                         String area = "";
                         int poltrona = k + 1;
 
-
                         if (poltrona >= 1 && poltrona <= 25) {
                             area = "Plateia A";
                         } else if (poltrona >= 26 && poltrona <= 125) {
@@ -644,6 +656,7 @@ public class Main extends Application {
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(15, 15, 15, 15));
 
+        // vetores com 3 linhas, cada linha representa as estatísticas de uma peça
         int[] vendasPorPeca = new int[3];
         int[] vendasPorSessao = new int[3];
         double[] lucroPorPeca = new double[3];
@@ -652,6 +665,7 @@ public class Main extends Application {
         double[] lucroMinimoPorPeca = new double[3];
         int[] sessaoMenosLucrativaPorPeca = new int[3];
 
+        // seleciona a matriz da peça correspondente à linha do vetor
         for (int i = 0; i < 3; i++) {
             long[][] peca = switch (i) {
                 case 0 -> p1;
@@ -663,20 +677,25 @@ public class Main extends Application {
             for (int j = 0; j < peca.length; j++) {
                 double lucroSessao = 0;
                 for (int k = 0; k < peca[j].length; k++) {
-                    if (peca[j][k] != 0) {
-                        vendasPorPeca[i]++;
-                        lucroPorPeca[i] += precoPorPoltrona(k + 1);
-                        vendasPorSessao[j]++;
-                        lucroSessao += precoPorPoltrona(k + 1);
+                    if (peca[j][k] != 0) { // peca[j][k] representa a poltrona k na sessão j da peça atual
+                        // peca[j][k] != 0 verifica se a poltrona está ocupada
+                        vendasPorPeca[i]++; // aumenta o contador de vendas da peça
+                        lucroPorPeca[i] += precoPorPoltrona(k + 1); // adiciona o preço da poltrona ao lucro da peça
+                        vendasPorSessao[j]++; // aumenta o contador de vendas da peça
+                        lucroSessao += precoPorPoltrona(k + 1); // adiciona o preço da poltrona ao lucro da sessão atual
                     }
                 }
                 if (lucroSessao > lucroMaximoPorPeca[i]) {
                     lucroMaximoPorPeca[i] = lucroSessao;
                     sessaoMaisLucrativaPorPeca[i] = j;
+                    // se o lucro da sessao atual for maior que o lucro maximo que ja tava registrado, o lucro máximo da peça é atualizado para armazenar o lucro atual
+                    // e tambem armazena o indice da sessao atual como a mais lucrativa
                 }
                 if (lucroSessao < lucroMinimoPorPeca[i] || lucroMinimoPorPeca[i] == 0) {
                     lucroMinimoPorPeca[i] = lucroSessao;
                     sessaoMenosLucrativaPorPeca[i] = j;
+                    // se o lucro da sessão atual é menor que o lucro mínimo já registrado ou se ainda não foi definido (igual a 0)
+                    // o lucro minimo da peça é atualizado para armazenar o lucro atual e armazena essa sessao como a menos lucrativa
                 }
             }
         }
@@ -686,6 +705,7 @@ public class Main extends Application {
         int sessaoMaisOcupada = maisVendido(vendasPorSessao);
         int sessaoMenosOcupada = menosVendido(vendasPorSessao);
 
+        // verifica se o numero de vendas da peça é diferente de 0, se for, o lucro medio é calculado dividindo o lucro total pelo numero de ingressos vendidos
         double lucroMedioPorPeca1 = vendasPorPeca[0] != 0 ? lucroPorPeca[0] / vendasPorPeca[0] : 0;
         double lucroMedioPorPeca2 = vendasPorPeca[1] != 0 ? lucroPorPeca[1] / vendasPorPeca[1] : 0;
         double lucroMedioPorPeca3 = vendasPorPeca[2] != 0 ? lucroPorPeca[2] / vendasPorPeca[2] : 0;
@@ -760,31 +780,25 @@ public class Main extends Application {
         primaryStage.show();
 
         scene.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case ESCAPE:
-                    voltar.fire();
-                    break;
+            if (Objects.requireNonNull(event.getCode()) == KeyCode.ESCAPE) {
+                voltar.fire();
             }
         });
     }
 
     private double precoPorPoltrona(int poltrona) {
-        if (poltrona >= 1 && poltrona <= 25) {
-            return precos[0];
-        } else if (poltrona >= 26 && poltrona <= 125) {
-            return precos[1];
-        } else if (poltrona >= 126 && poltrona <= 155) {
-            return precos[2];
-        } else if (poltrona >= 156 && poltrona <= 205) {
-            return precos[3];
-        } else if (poltrona >= 206 && poltrona <= 255) {
-            return precos[4];
-        } else {
-            return 0;
-        }
+        return switch (poltrona) {
+            case 1 -> precos[0];
+            case 26 -> precos[1];
+            case 126 -> precos[2];
+            case 156 -> precos[3];
+            case 206 -> precos[4];
+            default -> 0;
+        };
     }
 
     private int maisVendido(int[] vendas) {
+        // recebe um array e retorna o indice do elemento de maior valor
         int max = 0;
         for (int i = 1; i < vendas.length; i++) {
             if (vendas[i] > vendas[max]) {
@@ -795,6 +809,7 @@ public class Main extends Application {
     }
 
     private int menosVendido(int[] vendas) {
+        // recebe um array e retorna o indice do elemento de menor valor
         int min = 0;
         for (int i = 1; i < vendas.length; i++) {
             if (vendas[i] < vendas[min]) {
