@@ -104,12 +104,8 @@ public class Main extends Application {
 
             scene.setOnKeyPressed(event -> {
                 switch (event.getCode()) {
-                    case ESCAPE:
-                        voltarButton.fire();
-                        break;
-                    case ENTER:
-                        okButton.fire();
-                        break;
+                    case ESCAPE -> voltarButton.fire();
+                    case ENTER -> okButton.fire();
                 }
             });
 
@@ -143,9 +139,7 @@ public class Main extends Application {
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case ESCAPE:
-                    sair.fire();
-                    break;
+                case ESCAPE -> sair.fire();
             }
         });
     }
@@ -184,11 +178,13 @@ public class Main extends Application {
         mensagem.setStyle("-fx-text-fill:red");
 
         Label precosLabel = new Label();
-        precosLabel.setText("Plateia A: R$40,00\n" +
-                "Plateia B: R$60,00\n" +
-                "Frisa: R$120,00\n" +
-                "Camarotes: R$80,00\n" +
-                "Balcão Nobre: R$250,00\n");
+        precosLabel.setText("""
+                            Plateia A: R$40,00
+                            Plateia B: R$60,00
+                            Frisa: R$120,00
+                            Camarotes: R$80,00
+                            Balcão Nobre: R$250,00
+                            """);
         AnchorPane.setTopAnchor(precosLabel, 270.0);
         AnchorPane.setLeftAnchor(precosLabel, 20.0);
 
@@ -266,32 +262,30 @@ public class Main extends Application {
                             return;
                         }
                         int resultadoCompra = adicionarIngresso(cpf, peca, horario, area, poltrona);
-                        if (resultadoCompra == 0) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Sucesso!");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Ingresso comprado com sucesso!");
-                            alert.showAndWait();
-
-                            // Limpa os campos para o proóximo ingresso ser comprado
-                            digitarCPF.setText("");
-                            escolherPeca.getSelectionModel().clearSelection();
-                            escolherHorario.getSelectionModel().clearSelection();
-                            areaChoice.getSelectionModel().clearSelection();
-                            escolherPoltrona.setText("");
-
-                            quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
-
-                            if (quantidadeIngressos <= 0) {
-                                comprarIngressoStage.close();
-                                start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
+                        switch (resultadoCompra) {
+                            case 0 -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Sucesso!");
+                                alert.setHeaderText(null);
+                                alert.setContentText("Ingresso comprado com sucesso!");
+                                alert.showAndWait();
+                                // Limpa os campos para o proóximo ingresso ser comprado
+                                digitarCPF.setText("");
+                                escolherPeca.getSelectionModel().clearSelection();
+                                escolherHorario.getSelectionModel().clearSelection();
+                                areaChoice.getSelectionModel().clearSelection();
+                                escolherPoltrona.setText("");
+                                quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
+                                if (quantidadeIngressos <= 0) {
+                                    comprarIngressoStage.close();
+                                    start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
+                                }
                             }
-                        } else if (resultadoCompra == 1) {
-                            mensagem.setText("Não há mais ingressos disponíveis.");
-                        } else if (resultadoCompra == 3) {
-                            mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
-                        } else if (resultadoCompra == 4) {
-                            mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                            case 1 -> mensagem.setText("Não há mais ingressos disponíveis.");
+                            case 3 -> mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+                            case 4 -> mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                            default -> {
+                            }
                         }
                     } else {
                         long cnpj = Long.parseLong(digitado);
@@ -300,34 +294,30 @@ public class Main extends Application {
                             return;
                         }
                         int resultadoCompra = adicionarIngresso(cnpj, peca, horario, area, poltrona);
-                        if (resultadoCompra == 0) {
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Sucesso!");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Ingresso comprado com sucesso!");
-                            alert.showAndWait();
-
-                            // Limpa os campos para o proóximo ingresso ser comprado
-                            digitarCPF.setText("");
-                            escolherPeca.getSelectionModel().clearSelection();
-                            escolherHorario.getSelectionModel().clearSelection();
-                            areaChoice.getSelectionModel().clearSelection();
-                            escolherPoltrona.setText("");
-
-                            quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
-
-                            if (quantidadeIngressos <= 0) {
-                                comprarIngressoStage.close();
-                                start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
+                        switch (resultadoCompra) {
+                            case 0 -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("Sucesso!");
+                                alert.setHeaderText(null);
+                                alert.setContentText("Ingresso comprado com sucesso!");
+                                alert.showAndWait();
+                                // Limpa os campos para o proóximo ingresso ser comprado
+                                digitarCPF.setText("");
+                                escolherPeca.getSelectionModel().clearSelection();
+                                escolherHorario.getSelectionModel().clearSelection();
+                                areaChoice.getSelectionModel().clearSelection();
+                                escolherPoltrona.setText("");
+                                quantidadeIngressos--; // decrementa a quantidade de ingressos que foi digitada anteriormente
+                                if (quantidadeIngressos <= 0) {
+                                    comprarIngressoStage.close();
+                                    start(primaryStage); // todos os ingressos já foram comprados, então ele volta para o menu principal
+                                }
                             }
-                        } else if (resultadoCompra == 1) {
-                            mensagem.setText("Não há mais ingressos disponíveis.");
-                        } else if (resultadoCompra == 3) {
-                            mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
-
-                        } else if (resultadoCompra == 4) {
-                            mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
-
+                            case 1 -> mensagem.setText("Não há mais ingressos disponíveis.");
+                            case 3 -> mensagem.setText("Número de poltrona inválido para a área escolhida!\nPor favor, escolha uma poltrona válida.");
+                            case 4 -> mensagem.setText("A poltrona escolhida já está ocupada. Por favor, escolha outra poltrona.");
+                            default -> {
+                            }
                         }
                     }
                 } catch (NumberFormatException ex) {
@@ -354,14 +344,10 @@ public class Main extends Application {
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case ENTER:
-                    comprar.fire();
-                    break;
-                case ESCAPE:
-                    voltar.fire();
-                    break;
-                default:
-                    break;
+                case ENTER -> comprar.fire();
+                case ESCAPE -> voltar.fire();
+                default -> {
+                }
             }
         });
         primaryStage.setTitle("Comprar Ingresso");
@@ -449,29 +435,30 @@ public class Main extends Application {
 
         // serve apenas para definir se a poltrona que o usuário digitou está dentro da área selecionada por ele:
         int areaMin, areaMax;
-        switch (area + 1) {
-            case 1:
+       switch (area + 1) {
+            case 1 -> {
                 areaMin = 1;
                 areaMax = 25;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 areaMin = 26;
                 areaMax = 125;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 areaMin = 126;
                 areaMax = 155;
-                break;
-            case 4:
+            }
+            case 4 -> {
                 areaMin = 156;
                 areaMax = 205;
-                break;
-            case 5:
+            }
+            case 5 -> {
                 areaMin = 206;
                 areaMax = 255;
-                break;
-            default:
-                return 2;
+            }
+            default -> {
+                return 2; // Área inválida
+            }
         }
 
         if (poltrona < areaMin || poltrona > areaMax) {
@@ -574,14 +561,10 @@ public class Main extends Application {
 
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case ENTER:
-                    imprimir.fire();
-                    break;
-                case ESCAPE:
-                    voltar.fire();
-                    break;
-                default:
-                    break;
+                case ENTER -> imprimir.fire();
+                case ESCAPE -> voltar.fire();
+                default -> {
+                }
             }
         });
     }
