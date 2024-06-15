@@ -1,32 +1,24 @@
 .root {
-    -fx-font-family: 'Arial';
-    -fx-padding: 10;
-    -fx-background-color: linear-gradient(to bottom, #3d0404 0%, #960909 100%);
+    -fx-font-family: Elegante Classica;
+    -fx-background-color: linear-gradient(to bottom, #304157 0%, #08254a 100%);
 }
 
 .button {
-    -fx-background-color: #64b5f6;
+    -fx-background-color: #0d0c0c;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-padding: 6 10;
-    -fx-border-radius: 5;
+    -fx-font-weight: 800;
+    -fx-border-radius: 2;
     -fx-background-radius: 5;
 }
 
 .button:hover {
-    -fx-background-color: #42a5f5;
+    -fx-background-color: #383838;
 }
 
 .label {
-    -fx-font-size: 16px;
-    -fx-text-fill: #333;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
 }
 
-.text-field, .choice-box {
-    -fx-background-color: #fff;
-    -fx-border-color: #64b5f6;
-    -fx-border-width: 2px;
-    -fx-padding: 10;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-}
+
