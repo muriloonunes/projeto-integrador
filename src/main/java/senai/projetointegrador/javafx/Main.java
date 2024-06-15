@@ -48,46 +48,11 @@ public class Main extends Application {
 
         Button comprar = new Button("Comprar Ingresso");
         comprar.setOnAction(e -> {
-            Stage ingressos = new Stage();
-            AnchorPane painelIngresso = new AnchorPane();
-            painelIngresso.setPrefSize(400, 150);
-
-            Label mensagem = new Label();
-            mensagem.setLayoutX(20.0);
-            mensagem.setLayoutY(85.0);
-            mensagem.setStyle("-fx-text-fill:red");
-
-            Label ingressosLabel = new Label("Digite a quantidade de ingressos que serão comprados");
-            ingressosLabel.setLayoutX(20.0);
-            ingressosLabel.setLayoutY(40.0);
-
-            TextField quantidadeIngressos = new TextField();
-            quantidadeIngressos.setLayoutX(20.0);
-            quantidadeIngressos.setLayoutY(60.0);
-
-            Button okButton = new Button("Continuar");
-            okButton.setLayoutX(20.0);
-            okButton.setLayoutY(105.0);
-            okButton.setOnAction(j -> {
-                try {
-                    int quantidade = Integer.parseInt(quantidadeIngressos.getText().trim());
-                    comprarIngresso(primaryStage, quantidade);
-                    ingressos.close();
-                } catch (NumberFormatException ex) {
-                    mensagem.setText("Por favor, digite um número válido.");
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
-
-            painelIngresso.getChildren().addAll(ingressosLabel, quantidadeIngressos, okButton, mensagem);
-
-
-            Scene scene = new Scene(painelIngresso);
-            ingressos.setScene(scene);
-            ingressos.show();
-            scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            try {
+                comprarIngresso(primaryStage);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         });
         comprar.setLayoutX(590.0);
         comprar.setLayoutY(46.0);
@@ -123,7 +88,7 @@ public class Main extends Application {
         });
     }
 
-    private void comprarIngresso(Stage primaryStage, int quantidade) throws FileNotFoundException {
+    private void comprarIngresso(Stage primaryStage) throws FileNotFoundException {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(1280, 750);
         anchorPane.setPadding(new Insets(10, 10, 10, 10));
